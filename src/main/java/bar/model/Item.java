@@ -1,27 +1,31 @@
 package bar.model;
 
 public class Item {
-	private Long itemId;
-	private String itemName;
+	private Long id;
+	private String name;
 	private String price;
 	private String type;
 	private String description;
 
-	public Item(String itemName, String price, String type, String description) {
+	public Item() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Item(String name, String price, String type, String description) {
 		super();
 		// TODO increment the id
-		this.itemName = itemName;
+		this.name = name;
 		this.price = price;
 		this.type = type;
 		this.description = description;
 	}
 
-	public Long getItemId() {
-		return itemId;
+	public Long getId() {
+		return id;
 	}
 
-	public String getItemName() {
-		return itemName;
+	public String getName() {
+		return name;
 	}
 
 	public String getPrice() {
@@ -39,7 +43,7 @@ public class Item {
 	@Override
 	public String toString() {
 		// TODO make it fancier
-		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", price=" + price + ", type=" + type
+		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", type=" + type
 		        + ", description=" + description + "]";
 	}
 
@@ -47,7 +51,7 @@ public class Item {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -60,10 +64,10 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (itemId == null) {
-			if (other.itemId != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!itemId.equals(other.itemId))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
