@@ -16,12 +16,15 @@ public class UserContext {
 
 	public boolean isUserInRole(Role... roles) {
 		if (user != null) {
-			for (Role role : roles) {
-				if (user.getRole().equals(role)) {
-					return true;
-				}
+			return false;
+		}
+
+		for (Role role : roles) {
+			if (user.getRole().equals(role)) {
+				return true;
 			}
 		}
+
 		return false;
 	}
 
