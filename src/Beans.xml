@@ -22,4 +22,12 @@
 		<property name="userContext"></property>
 		<aop:scoped-proxy/>
 	</bean>
+	<bean id="itemController" class="bar.services.ItemController">
+		<property name="userContext"></property>
+		<aop:scoped-proxy/>
+	</bean>
+	<bean id="orderController" class="bar.services.orderController">
+		<property name="userContext"></property>
+		<aop:scoped-proxy/>
+	</bean>
 </beans>

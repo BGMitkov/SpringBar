@@ -45,6 +45,10 @@ public class Order {
 		return new Date(orderDate.getTime());
 	}
 	
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
+	}
+	
 	public Date getAcceptanceDate() {
 		return acceptanceDate;
 	}
