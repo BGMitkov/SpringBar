@@ -47,12 +47,9 @@ public class ItemController {
 		if (!userContext.isUserInRole(Role.MANAGER, Role.SERVER)) {
 			return "unauthorized";
 		}
-
-		/*
-		 * Collection<Item> items = itemDAO.getItems();
-		 * modelMap.addAllAttributes(items);
-		 */
-
+		
+//		modelMap.addAllAttributes(itemDAO.getItems());
+		 
 		return "items";
 	}
 }
