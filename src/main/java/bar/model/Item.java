@@ -1,6 +1,16 @@
 package bar.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Item {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="id")
 	private Long id;
 	private String name;
 	private String price;
@@ -12,8 +22,6 @@ public class Item {
 	}
 	
 	public Item(String name, String price, String type, String description) {
-		super();
-		// TODO increment the id
 		this.name = name;
 		this.price = price;
 		this.type = type;

@@ -1,7 +1,6 @@
 package bar.services;
 
-import java.util.Collection;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,7 +16,9 @@ import bar.model.Role;
 @Controller
 public class ItemController {
 
+	@Autowired
 	private ItemDAO itemDAO;
+	@Autowired
 	private UserContext userContext;
 
 	// TODO add user context filter

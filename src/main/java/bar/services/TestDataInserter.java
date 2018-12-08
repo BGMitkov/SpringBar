@@ -1,12 +1,19 @@
 package bar.services;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import bar.utilities.DatabaseUtilities;
 
 public class TestDataInserter {
-	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-		
-		
+	
+	@Autowired
+	private DatabaseUtilities databaseUtilities;
+
+	public void init() {
+		databaseUtilities.storeTestData();
+	}
+	
+	public void destroy() {
+		databaseUtilities.deleteData();
 	}
 }

@@ -13,6 +13,9 @@ public class Order {
 	private Date acceptanceDate;
 	private float totalPrice;
 
+	public Order() {
+	}
+
 	public Order(List<Item> orderedItems, String tableNumber) {
 		this.orderedItems = orderedItems;
 		this.tableNumber = tableNumber;
@@ -33,6 +36,10 @@ public class Order {
 		this.executor = executor;
 	}
 
+	public String getTableNumber() {
+		return tableNumber;
+	}
+
 	public Status getStatus() {
 		return status;
 	}
@@ -44,30 +51,30 @@ public class Order {
 	public Date getOrderDate() {
 		return new Date(orderDate.getTime());
 	}
-	
+
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
-	
+
 	public Date getAcceptanceDate() {
 		return acceptanceDate;
 	}
-	
+
 	public void setAcceptanceDate(Date acceptanceDate) {
 		this.acceptanceDate = acceptanceDate;
 	}
-	
+
 	public List<Item> getOrderedItems() {
 		return orderedItems;
 	}
-	
+
 	public float getTotalPrice() {
 		return totalPrice;
 	}
-	
+
 	public void calculateTotalPrice() {
 		float sumPrice = 0.0f;
-		for(Item item : orderedItems) {
+		for (Item item : orderedItems) {
 			sumPrice += Float.parseFloat(item.getPrice());
 		}
 		totalPrice = sumPrice;
@@ -75,7 +82,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		//TODO make fancier
+		// TODO make fancier
 		return "Order [orderId=" + orderId + ", orderedItems=" + orderedItems + ", tableNumber=" + tableNumber
 		        + ", status=" + status + ", orderDate=" + orderDate + ", acceptanceDate=" + acceptanceDate
 		        + ", totalPrice=" + totalPrice + "]";
