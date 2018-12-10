@@ -16,7 +16,7 @@ import bar.model.Role;
 @Controller
 public class ItemController {
 
-	@Autowired
+	/*@Autowired
 	private ItemDAO itemDAO;
 	@Autowired
 	private UserContext userContext;
@@ -33,7 +33,7 @@ public class ItemController {
 			throw new SpringException("Unauthorized request!");
 		}
 
-		itemDAO.addItem(item);
+//		itemDAO.addItem(item);
 		model.addAttribute("id", item.getId());
 		model.addAttribute("name", item.getName());
 		model.addAttribute("description", item.getDescription());
@@ -52,5 +52,5 @@ public class ItemController {
 //		modelMap.addAllAttributes(itemDAO.getItems());
 		 
 		return "items";
-	}
+	}*/
 }

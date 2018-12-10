@@ -1,8 +1,11 @@
 package bar.services;
 
+import org.springframework.stereotype.Component;
+
 import bar.model.Role;
 import bar.model.User;
 
+@Component
 public class UserContext {
 	private User user;
 

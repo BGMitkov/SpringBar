@@ -30,7 +30,6 @@ import bar.model.User;
 public class UserServiceTest {
 
 	MockHttpSession session;
-	javax.servlet.http.HttpSession realSession;
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -42,7 +41,7 @@ public class UserServiceTest {
 	@Before
 	public void setup() {
 		this.mockMvc = webAppContextSetup(this.wac).apply(sharedHttpSession()).build();
-		session = new MockHttpSession();
+		this.session = new MockHttpSession();
 	}
 
 	@Test
@@ -51,16 +50,15 @@ public class UserServiceTest {
 
 	@Test
 	public final void whenEntityIsCreated_thenNoExceptions() throws Exception {
-		User testUser = new User("regtest", passwordEncoder.encode("regtest"), "regtest@test.test", Role.MANAGER,
-		        new Date(1));
-		testUser.setId(5l);
+//		User testUser = new User("regtest", passwordEncoder.encode("regtest"), "regtest@test.test", Role.MANAGER,
+//		        new Date(0));
+//		testUser.setId(5l);
 		this.mockMvc
 		        .perform(post("/registerUser").contentType("application/x-www-form-urlencoded").param("name", "regtest")
-		                .param("password", "regtes").param("email", "regtest@test.test").param("role", "MANAGER")
-		                .param("birthDate", "1/1/1970"))
+		                .param("password", "regtest").param("email", "regtest@test.test").param("role", "MANAGER")
+		                .param("birthDate", "02:00:00 1/1/1970"))
 		        .andExpect(status().isOk()).andExpect(view().name("registeredUser"))
-		        .andExpect(forwardedUrl("/WEB-INF/jsp/registeredUser.jsp"))
-		        .andExpect(model().attribute("user", testUser));
-
+		        .andExpect(forwardedUrl("/WEB-INF/jsp/registeredUser.jsp"));
 	}
+	
 }

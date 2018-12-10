@@ -16,10 +16,10 @@ public class DatabaseUtilities {
 	@Autowired
 	private UserDAO userDAO;
 
-	private static User[] USERS = { new User("test", "test", "test.user@somemail.com", Role.MANAGER, new Date()),
-	        new User("test2", "test", "test2.user@somemail.com", Role.SERVER, new Date()),
-	        new User("test3", "test", "second.user@somemail.com", Role.BARTENDER, new Date()),
-	        new User("Third User", "98411TA", "third.user@somemail.com", Role.MANAGER, new Date()) };
+	private static User[] USERS = { new User("test", "test", "test.user@somemail.com", Role.MANAGER, "2018-01-01"),
+	        new User("test2", "test", "test2.user@somemail.com", Role.SERVER, "2018-01-01"),
+	        new User("test3", "test", "second.user@somemail.com", Role.BARTENDER, "2018-01-01"),
+	        new User("Third User", "98411TA", "third.user@somemail.com", Role.MANAGER, "2018-01-01") };
 
 	public void storeTestData() {
 		addTestUsers();

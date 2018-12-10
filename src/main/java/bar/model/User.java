@@ -1,17 +1,22 @@
 package bar.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
-@Table(name="USERS")
+@Table(name = "USERS")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1415004228428308283L;
@@ -24,10 +29,12 @@ public class User implements Serializable {
 	private String password;
 	@Column(unique = true)
 	private String email;
+	@Column(length = 10)
 	private Role role;
-	private Date birthDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String birthDate;
 
-	public User(String name, String password, String email, Role role, Date birthDate) {
+	public User(String name, String password, String email, Role role, String birthDate) {
 		this.name = name;
 		this.password = password;
 		this.email = email;
@@ -42,7 +49,7 @@ public class User implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -54,7 +61,7 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -63,16 +70,46 @@ public class User implements Serializable {
 		return role;
 	}
 
+	public String getBirthDate() {
+		return birthDate;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public void setBirthDate(String birthDate) {
+		this.birthDate = birthDate;
+	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + name + ", email=" + email + ", birthDate=" + birthDate + "]";
+		return "User [id=" + id + ", name=" + name + ", password=" + password + ", email=" + email + ", role=" + role
+				+ ", birthDate=" + birthDate + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		return result;
 	}
 
@@ -85,11 +122,34 @@ public class User implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (birthDate == null) {
+			if (other.birthDate != null)
+				return false;
+		} else if (!birthDate.equals(other.birthDate))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (role != other.role)
+			return false;
 		return true;
 	}
+
 }
