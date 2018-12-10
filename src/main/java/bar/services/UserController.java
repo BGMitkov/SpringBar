@@ -37,19 +37,20 @@ public class UserController {
 		// return "unauthorized";
 		// }
 
-//		User userWithName = userDAO.findByProperty("name", user.getName());
-//		User userWithEmail = userDAO.findByProperty("email", user.getEmail());
-//
-//		if (userWithName != null) {
-//			return "usernameConflict";
-//		}
-//		if (userWithEmail != null) {
-//			return "emailConflict";
-//		}
+		User userWithName = userDAO.findByProperty("name", user.getName());
+		User userWithEmail = userDAO.findByProperty("email", user.getEmail());
+
+		if (userWithName != null) {
+			return "nameConflict";
+		}
+		if (userWithEmail != null) {
+			return "emailConflict";
+		}
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userDAO.create(user);
-
+		
+		user.setPassword(null);
 		model.addAttribute(user);
 		// TODO make registeredUser.jsp
 
