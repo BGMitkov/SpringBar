@@ -1,5 +1,11 @@
 Manifest-Version: 1.0
+Implementation-Title: SpringBar
+Implementation-Version: 0.0.1-SNAPSHOT
 Built-By: bgmitkov
+Implementation-Vendor-Id: java-spring
 Build-Jdk: 1.8.0_191
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/spring-bar
 Created-By: Maven Integration for Eclipse
+Main-Class: bar.spring.SpringBarApplication
 

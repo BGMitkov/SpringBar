@@ -3,15 +3,13 @@ package bar.dao;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
-import javax.persistence.TypedQuery;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import bar.mappers.UserMapper;
 import bar.model.User;
 
+@Repository
 public class UserDAO extends AbstractJpaDAO<User> {
 
 	@Autowired
@@ -36,12 +34,4 @@ public class UserDAO extends AbstractJpaDAO<User> {
 				entity.getRole().toString(), entity.getBirthDate());
 		super.create(entity);
 	}
-
-//	private User query(TypedQuery<User> query) {
-//		try {
-//			return query.getSingleResult();
-//		} catch (Exception e) {
-//			return null;
-//		}
-//	}
 }

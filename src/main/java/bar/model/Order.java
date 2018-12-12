@@ -7,10 +7,10 @@ public class Order {
 	private Long orderId;
 	private List<Item> orderedItems;
 	private String tableNumber;
-	private User executor;
+	private String executor;
 	private Status status;
-	private Date orderDate;
-	private Date acceptanceDate;
+	private long orderDate;
+	private long acceptanceDate;
 	private float totalPrice;
 
 	public Order() {
@@ -20,19 +20,35 @@ public class Order {
 		this.orderedItems = orderedItems;
 		this.tableNumber = tableNumber;
 		this.status = Status.WAITING;
-		this.orderDate = new Date();
+		this.orderDate = new Date().getTime();
 		this.totalPrice = 0.0f;
+	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
+
+	public void setOrderedItems(List<Item> orderedItems) {
+		this.orderedItems = orderedItems;
+	}
+
+	public void setTableNumber(String tableNumber) {
+		this.tableNumber = tableNumber;
+	}
+
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
 	public Long getOrderId() {
 		return orderId;
 	}
 
-	public User getExecutor() {
+	public String getExecutor() {
 		return executor;
 	}
 
-	public void setExecutor(User executor) {
+	public void setExecutor(String executor) {
 		this.executor = executor;
 	}
 
@@ -49,18 +65,18 @@ public class Order {
 	}
 
 	public Date getOrderDate() {
-		return new Date(orderDate.getTime());
+		return new Date(orderDate);
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(long orderDate) {
 		this.orderDate = orderDate;
 	}
 
 	public Date getAcceptanceDate() {
-		return acceptanceDate;
+		return new Date(acceptanceDate);
 	}
 
-	public void setAcceptanceDate(Date acceptanceDate) {
+	public void setAcceptanceDate(long acceptanceDate) {
 		this.acceptanceDate = acceptanceDate;
 	}
 
@@ -84,8 +100,8 @@ public class Order {
 	public String toString() {
 		// TODO make fancier
 		return "Order [orderId=" + orderId + ", orderedItems=" + orderedItems + ", tableNumber=" + tableNumber
-		        + ", status=" + status + ", orderDate=" + orderDate + ", acceptanceDate=" + acceptanceDate
-		        + ", totalPrice=" + totalPrice + "]";
+				+ ", status=" + status + ", orderDate=" + new Date(orderDate).toString() + ", acceptanceDate="
+				+ new Date(acceptanceDate).toString() + ", totalPrice=" + totalPrice + "]";
 	}
 
 	@Override
@@ -112,4 +128,5 @@ public class Order {
 			return false;
 		return true;
 	}
+
 }

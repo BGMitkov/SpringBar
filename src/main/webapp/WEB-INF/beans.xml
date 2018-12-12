@@ -68,38 +68,38 @@
 <!-- 	<tx:annotation-driven -->
 <!-- 		transaction-manager="txManager" /> -->
 
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName"
-			value="com.mysql.cj.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/test"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="51303"></property>
-	</bean>
+<!-- 	<bean id="dataSource" -->
+<!-- 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+<!-- 		<property name="driverClassName" -->
+<!-- 			value="com.mysql.cj.jdbc.Driver" /> -->
+<!-- 		<property name="url" value="jdbc:mysql://localhost:3306/test"></property> -->
+<!-- 		<property name="username" value="root"></property> -->
+<!-- 		<property name="password" value="51303"></property> -->
+<!-- 	</bean> -->
 
 	<!-- <bean id="transactionManager" -->
 	<!-- class="org.springframework.orm.jpa.JpaTransactionManager"> -->
 	<!-- <property name="entityManagerFactory" ref="myEmf"></property> -->
 	<!-- </bean> -->
 
-	<tx:advice id="txAdvice"
-		transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="create" />
-		</tx:attributes>
-	</tx:advice>
+<!-- 	<tx:advice id="txAdvice" -->
+<!-- 		transaction-manager="transactionManager"> -->
+<!-- 		<tx:attributes> -->
+<!-- 			<tx:method name="create" /> -->
+<!-- 		</tx:attributes> -->
+<!-- 	</tx:advice> -->
 
-	<aop:config>
-		<aop:pointcut id="createOperation"
-			expression="execution(* bar.dao.UserDAO.create(..))" />
-		<aop:advisor advice-ref="txAdvice"
-			pointcut-ref="createOperation" />
-	</aop:config>
+<!-- 	<aop:config> -->
+<!-- 		<aop:pointcut id="createOperation" -->
+<!-- 			expression="execution(* bar.dao.UserDAO.create(..))" /> -->
+<!-- 		<aop:advisor advice-ref="txAdvice" -->
+<!-- 			pointcut-ref="createOperation" /> -->
+<!-- 	</aop:config> -->
 
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"></property>
-	</bean>
+<!-- 	<bean id="transactionManager" -->
+<!-- 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
+<!-- 		<property name="dataSource" ref="dataSource"></property> -->
+<!-- 	</bean> -->
 
 	<tx:annotation-driven />
 
@@ -125,10 +125,10 @@
 	<!-- <bean id="itemDAO" class="bar.dao.ItemDAO"></bean> -->
 
 	<bean id="userDAO" class="bar.dao.UserDAO"/>
-	<bean id="userMapper" class="bar.dao.UserMapper"/>
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<constructor-arg name="dataSource" ref="dataSource"/>
-	</bean>
+	<bean id="userMapper" class="bar.mappers.UserMapper"/>
+<!-- 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"> -->
+<!-- 		<constructor-arg name="dataSource" ref="dataSource"/> -->
+<!-- 	</bean> -->
 
 	<!-- <bean id="testDataInserter" class="bar.services.TestDataInserter" -->
 	<!-- init-method="init" destroy-method="destroy" /> -->

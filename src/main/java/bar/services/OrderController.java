@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import bar.dao.OrderDAO;
 import bar.model.Order;
 import bar.model.Role;
 
-@Controller
+
 public class OrderController {
 
 	private static final String UNAUTHORIZED = "unauthorized";
 	@Autowired
 	private UserContext userContext;
-	// private OrderDAO orderDAO;
+	@Autowired
+	private OrderDAO orderDAO;
 	// private BillDAO billDAO;
 	// TODO make the roles access configurable
 
@@ -31,7 +33,7 @@ public class OrderController {
 			return UNAUTHORIZED;
 		}
 
-		order.setOrderDate(new Date());
+		order.setOrderDate(new Date().getTime());
 		order.calculateTotalPrice();
 		// orderDAO.addOrder(order);
 		// Bill bill = billDAO.getBill(order.getTableNumber());

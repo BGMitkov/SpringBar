@@ -1,33 +1,15 @@
 package bar.dao;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
-
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.support.DaoSupport;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.orm.hibernate5.SessionFactoryUtils;
-import org.springframework.orm.jpa.EntityManagerHolder;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-public abstract class AbstractJpaDAO<T extends Serializable> {
+public abstract class AbstractJpaDAO<T> {
 
 	private Class<T> clazz;
 
+	@Qualifier("jdbcTest")
 	@Autowired
 	JdbcTemplate jdbcTemplateObject;
 
