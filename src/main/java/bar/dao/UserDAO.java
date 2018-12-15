@@ -6,7 +6,7 @@ import javax.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import bar.mappers.UserMapper;
+import bar.mapper.UserMapper;
 import bar.model.User;
 
 @Repository

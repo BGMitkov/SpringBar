@@ -12,7 +12,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "USERS")
 public class User {
-
+	public final static String PROPERTY_NAME = "name";
+	public final static String PROPERTY_EMAIL = "email";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;

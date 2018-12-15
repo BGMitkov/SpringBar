@@ -2,7 +2,7 @@ package bar.dao;
 
 import org.springframework.stereotype.Repository;
 
-import bar.mappers.OrderMapper;
+import bar.mapper.OrderMapper;
 import bar.model.Order;
 
 @Repository

@@ -1,4 +1,4 @@
-package bar.mappers;
+package bar.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,0 +1,5 @@
+package bar.exception;
+
+public class UserNotFoundException extends RuntimeException {
+	private static final long serialVersionUID = 49322242289039702L;
+}

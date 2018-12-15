@@ -1,12 +1,17 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
 <head>
-<title>Spring MVC Form Handling</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Registered Employee Data</title>
+<spring:url value="/resources/css/bootstrap.css" var="bootstrapCss" />
+<spring:url value="/resources/css/bar.css" var="barCss" />
+<link href="${bootstrapCss}" rel="stylesheet" />
+<link href="${barCss}" rel="stylesheet" />
 </head>
 
 <body>
-    <h2>Registered User</h2>
-
+    <h1>${applicationName}</h1>
     <table>
         <tr>
             <td>id</td>

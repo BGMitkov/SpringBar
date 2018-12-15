@@ -1,4 +1,4 @@
-package bar.services;
+package bar.service;
 
 import java.util.Date;
 

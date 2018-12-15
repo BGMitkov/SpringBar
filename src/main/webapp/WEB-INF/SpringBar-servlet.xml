@@ -9,7 +9,6 @@
    	http://www.springframework.org/schema/context 
    	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<import resource="Beans.xml" />
 
 	<context:component-scan base-package="bar"></context:component-scan>
 
@@ -22,4 +21,9 @@
 	<mvc:resources mapping="/resources/**"
 		location="/resources/" />
 	<mvc:annotation-driven />
+	<mvc:interceptors>
+		<bean id="UserServiceInterceptor"
+			class="bar.interceptor.UserServiceInterceptor" />
+	</mvc:interceptors>
+
 </beans>

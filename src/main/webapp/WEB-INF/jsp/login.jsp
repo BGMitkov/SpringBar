@@ -5,9 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Login</title>
+<!-- <link rel="stylesheet" type="text/css" href="/SpringBar/resources/css/bootstrap.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="/SpringBar/resources/css/bar.css" /> -->
 <spring:url value="/resources/css/bootstrap.css" var="bootstrapCss" />
 <spring:url value="/resources/css/bar.css" var="barCss" />
-<link href="${bootsrapCss}" rel="stylesheet" />
+<link href="${bootstrapCss}" rel="stylesheet" />
 <link href="${barCss}" rel="stylesheet" />
 </head>
 <body>

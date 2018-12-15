@@ -4,11 +4,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Register Employee Form</title>
-<link rel="stylesheet" type="text/css" href="styles/bootstrap.css" />
-<link rel="stylesheet" type="text/css" href="styles/bar.css" />
+<link rel="stylesheet" type="text/css"
+	href="/SpringBar/resources/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="/SpringBar/resources/css/bar.css" />
 </head>
 <body>
-	<h1>Register Employee</h1>
+	<h1>${applicationName}</h1>
 	<form:form method="POST" modelAttribute="user"
 		action="/SpringBar/registerEmployeeSubmit">
 		<div class="form-group">
@@ -40,8 +42,8 @@
 			<label for="role">Role:</label> <select class="form-control"
 				name="role" id="role">
 				<option value="UNDEFINED">Select Role</option>
-				<option value="WAITER">Waiter</option>
-				<option value="BARMAN">Barman</option>
+				<option value="SERVER">Server</option>
+				<option value="BARTENDER">Bartender</option>
 				<option value="MANAGER">Manager</option>
 			</select>
 		</div>
