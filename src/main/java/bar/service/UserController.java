@@ -21,13 +21,9 @@ import bar.model.User;
 
 @Controller
 public class UserController {
-	private static final String APPLICATION_NAME = "applicationName";
-
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	// TODO check whether it is possible to insert preconfigured Model.
-	@Value("${spring.application.name:Application}")
-	private String applicationName;
 	// TODO decide whether this is needed.
 	// AOP is to be implemented for user authentication
 	@Autowired
@@ -43,17 +39,12 @@ public class UserController {
 	@GetMapping("/registerEmployee")
 	public String registerEmployeeForm(Model model) {
 		logger.info("Request for register employee form.");
-		model.addAttribute(APPLICATION_NAME, applicationName);
 		return "registerEmployee";
 	}
 
 	@RequestMapping(value = "/registerEmployeeSubmit", method = RequestMethod.POST)
 	public String registerUser(@ModelAttribute("user") User user, ModelMap model) {
 		logger.info("Request for register employee submit");
-		// if(!userContext.isUserInRole(Role.MANAGER)) {
-		// return "unauthorized";
-		// }
-
 		User userWithName = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
 		User userWithEmail = userDAO.findByProperty(User.PROPERTY_EMAIL, user.getEmail());
 
@@ -69,7 +60,6 @@ public class UserController {
 
 		user.setPassword(null);
 		model.addAttribute(user);
-		model.addAttribute(APPLICATION_NAME, applicationName);
 		return "registeredUser";
 	}
 
@@ -82,22 +72,13 @@ public class UserController {
 	@PostMapping("/loginSubmit")
 	public String login(@ModelAttribute("user") UserDTO user, Model model) {
 		logger.info("Request for login submit");
-		User storedUser = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
-
-		if (storedUser == null || !passwordEncoder.matches(user.getPassword(), storedUser.getPassword())) {
-			return "invalidCredentials";
-		}
-
-		userContext.setUser(storedUser);
-		model.addAttribute(User.PROPERTY_NAME, storedUser.getName());
-		model.addAttribute(APPLICATION_NAME, applicationName);
-		return "index";
+		return securityService.authenticate(user) ? "index" : "invalidCredentials";
 	}
 
 	@GetMapping("/logout")
 	public String logout() {
-		logger.info("Request for logout");
-//		userContext.setUser(null);
+		logger.info("Request for logout by: {}", userContext.getName());
+		userContext.setUser(null);
 		return "redirect:login";
 	}
 }

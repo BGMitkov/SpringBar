@@ -15,7 +15,7 @@
 <body>
 	<div align="left">
 		<h2>
-			<a href="index.html">Simple Bar Management</a>
+			<a href="index.html">${applicationName}</a>
 		</h2>
 	</div>
 	<hr>

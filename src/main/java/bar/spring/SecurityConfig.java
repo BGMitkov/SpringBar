@@ -14,7 +14,7 @@ public class SecurityConfig {
 		SecurityService securityService = new SecurityService();
 		securityService.setPermissions("registerEmployeeForm", Role.MANAGER);
 		securityService.setPermissions("registerEmployeeSubmit", Role.MANAGER);
-
+		
 		return securityService;
 	}
 }

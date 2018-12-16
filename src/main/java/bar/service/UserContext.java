@@ -19,11 +19,6 @@ public class UserContext {
 		return user != null;
 	}
 
-	public User getUser() {
-		logger.info("User Retrieval");
-		return user;
-	}
-
 	public void setUser(User user) {
 		logger.info("User authenticated");
 		this.user = user;
@@ -44,4 +39,12 @@ public class UserContext {
 		return false;
 	}
 
+	public String getName() {
+		logger.info("getName(): {}", user.getName());
+		return user.getName();
+	}
+	
+	public Role getRole() {
+		return user.getRole();
+	}
 }
