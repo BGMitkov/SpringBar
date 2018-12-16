@@ -37,6 +37,8 @@ public class UserController {
 	private UserDAO userDAO;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private SecurityService securityService;
 
 	@GetMapping("/registerEmployee")
 	public String registerEmployeeForm(Model model) {
