@@ -1,13 +1,22 @@
 package bar.dao;
 
+import java.util.List;
+
+import javax.persistence.EntityExistsException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import bar.mapper.OrderMapper;
 import bar.model.Order;
+import bar.model.OrderStatus;
+import bar.model.User;
 
 @Repository
-public class OrderDAO extends AbstractJpaDAO<Order>{
+public interface OrderDAO extends CrudRepository<Order, Long> {
+
+	List<Order> findByStatus(OrderStatus status);
 	
-	private OrderMapper orderMapper;
-	
+	List<Order> findByExecutorAndStatus(User executor, OrderStatus status);
 }

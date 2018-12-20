@@ -1,16 +1,30 @@
 package bar.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Bill {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	@OneToMany(mappedBy = "bill")
 	private List<Order> orders;
+	//TODO make a table model to allow configuration
 	private String tableNumber;
-	// TODO refactor to use currency and locale
-	private float price;
+	private int price;
+	//TODO make a model for status so that it can be configurable
 	private BillStatus status;
 
-	public Bill(List<Order> orders, String tableNumber, BillStatus billStatus) {
-		this.orders = orders;
+	public Bill(String tableNumber, BillStatus billStatus) {
+		this.orders = new LinkedList<>();
 		this.tableNumber = tableNumber;
 		this.status = billStatus;
 	}
@@ -19,17 +33,16 @@ public class Bill {
 		return tableNumber;
 	}
 
-	//TODO implement scenario of table swap
 	public void setTableNumber(String tableNumber) {
 		this.tableNumber = tableNumber;
 	}
 
-	public float getPrice() {
-		return price;
-	}
-
-	public void setPrice(float price) {
-		this.price = price;
+	public int getPrice() {
+		int sum = 0;
+		for (Order order : orders) {
+			sum += order.getTotalPrice();
+		}
+		return sum;
 	}
 
 	public BillStatus getStatus() {
@@ -40,11 +53,21 @@ public class Bill {
 		this.status = status;
 	}
 
-	public List<Order> getOrders() {
-		return orders;
-	}
-	
 	public void addOrder(Order order) {
 		orders.add(order);
+	}
+
+	private String ordersToString() {
+		StringBuilder builder = new StringBuilder();
+		for (Order order : orders) {
+			builder.append(order.toString()).append(System.lineSeparator());
+		}
+		return builder.toString();
+	}
+
+	@Override
+	public String toString() {
+		return "Bill [orders=" + ordersToString() + ", tableNumber=" + tableNumber + ", price=" + price + ", status="
+				+ status + "]";
 	}
 }

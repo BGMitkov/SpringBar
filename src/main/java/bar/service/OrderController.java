@@ -12,63 +12,62 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import bar.dao.BillDAO;
 import bar.dao.OrderDAO;
+import bar.model.Bill;
+import bar.model.BillStatus;
 import bar.model.Order;
 import bar.model.Role;
+import bar.model.OrderStatus;
 
-
+@Controller
+@RequestMapping("/orders")
 public class OrderController {
 
 	private static final String UNAUTHORIZED = "unauthorized";
-	@Autowired
-	private UserContext userContext;
+
 	@Autowired
 	private OrderDAO orderDAO;
-	// private BillDAO billDAO;
+	@Autowired
+	private BillDAO billDAO;
+	@Autowired
+	private SecurityService securityService;
 	// TODO make the roles access configurable
 
+	// TODO create OrderDTO
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	public String order(@ModelAttribute() Order order) {
-		if (!userContext.isUserInRole(Role.MANAGER, Role.SERVER)) {
-			return UNAUTHORIZED;
+		Bill bill = billDAO.findByTableNumberAndStatus(order.getTable(), BillStatus.OPEN);
+		if (bill == null) {
+			bill = billDAO.save(new Bill(order.getTable(), BillStatus.OPEN));
 		}
-
 		order.setOrderDate(new Date().getTime());
-		order.calculateTotalPrice();
-		// orderDAO.addOrder(order);
-		// Bill bill = billDAO.getBill(order.getTableNumber());
-		// bill.addOrder(order);
+		bill.addOrder(order);
 		return "items";
 	}
 
-	@RequestMapping(value = "/orders", method = RequestMethod.GET)
+	// TODO convert to rest
+	@RequestMapping(value = "/waiting", method = RequestMethod.GET)
 	public String getWaitingOrders(ModelMap modelMap) {
-		if (!userContext.isUserInRole(Role.MANAGER, Role.BARTENDER)) {
-			return UNAUTHORIZED;
-		}
 
-		// modelMap.addAllAttributes(orderDAO.getWaitingOrders());
+		modelMap.addAllAttributes(orderDAO.findByStatus(OrderStatus.WAITING));
 
 		return "orders";
 	}
 
-	@RequestMapping(value = "/acceptedOrders", method = RequestMethod.GET)
+	// TODO decide to change the accepted to preparing status
+	// TODO convert this to REST api
+	@RequestMapping(value = "/accepted", method = RequestMethod.GET)
 	public String getAcceptedOrders(ModelMap modelMap) {
-		if (!userContext.isUserInRole(Role.MANAGER, Role.BARTENDER)) {
-			return UNAUTHORIZED;
-		}
 
-		// modelMap.addAllAttributes(orderDAO.getAcceptedOrders(userContext.getUser()));
-		// TODO decide whether this is part of the orders request
+		modelMap.addAllAttributes(orderDAO.findByExecutorAndStatus(securityService.getUser(), OrderStatus.ACCEPTED));
+
 		return "acceptedOrders";
 	}
 
-	// TODO consider making this asynchrous request
-	@PostMapping("/acceptOrder")
+	// TODO convert to rest
+	@PostMapping("/accept")
 	public String acceptOrder(@ModelAttribute() String orderId) {
-		if (!userContext.isUserInRole(Role.MANAGER, Role.BARTENDER)) {
-			return UNAUTHORIZED;
-		}
 
 		// Order order = orderDAO.findById(Long.parseLong(orderId));
 		// if(order != null) {
@@ -84,11 +83,7 @@ public class OrderController {
 
 	@GetMapping(value = "/bill/{tableNumber}")
 	public String printBill(@PathVariable("tableNumber") int tableNumber) {
-		if (!userContext.isUserInRole(Role.MANAGER, Role.SERVER)) {
-			return UNAUTHORIZED;
-		}
 
-		
 		return "bill";
 	}
 

@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
-import org.aspectj.lang.reflect.PerClauseKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,10 @@ import bar.dto.UserDTO;
 import bar.model.Role;
 import bar.model.User;
 
+/**
+ * @author bgmitkov
+ *
+ */
 @Service
 public class SecurityService {
 	private static final Logger logger = LoggerFactory.getLogger(SecurityService.class);
@@ -55,11 +56,15 @@ public class SecurityService {
 	}
 
 	public String getUserName() {
-		if (userContext == null) {
+		if (!userContext.isAuthenticated()) {
 			return "Sign in";
 		}
 
 		return userContext.getName();
+	}
+
+	public User getUser() {
+		return userContext.getUser();
 	}
 
 	public boolean authenticate(UserDTO user) {
@@ -71,5 +76,31 @@ public class SecurityService {
 
 		userContext.setUser(storedUser);
 		return true;
+	}
+
+	/**
+	 * @param user the object containing the submitted user data
+	 * @return the name of the view to send to user
+	 */
+	public String register(User user) {
+		logger.info("Request for register user");
+		User userWithName = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
+		User userWithEmail = userDAO.findByProperty(User.PROPERTY_EMAIL, user.getEmail());
+
+		if (userWithName != null) {
+			return "nameConflict";
+		}
+		if (userWithEmail != null) {
+			return "emailConflict";
+		}
+
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		userDAO.create(user);
+
+		return "registeredUser";
+	}
+
+	public void signout() {
+		userContext.setUser(null);
 	}
 }

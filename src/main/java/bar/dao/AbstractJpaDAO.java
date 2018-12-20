@@ -3,12 +3,13 @@ package bar.dao;
 import javax.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public abstract class AbstractJpaDAO<T> {
 
 	private Class<T> clazz;
-
+	
 	@Qualifier("jdbcTest")
 	@Autowired
 	JdbcTemplate jdbcTemplateObject;
@@ -24,7 +25,7 @@ public abstract class AbstractJpaDAO<T> {
 	public void setClazz(Class<T> clazz) {
 		this.clazz = clazz;
 	}
-
+	
 //	public T findOne(long id) {
 //		return entityManager.find(clazz, id);
 //	}
@@ -34,8 +35,7 @@ public abstract class AbstractJpaDAO<T> {
 //	}
 //
 	public void create(T entity) throws EntityExistsException {
-		
-	}
+	};
 //
 //	public T update(T entity) {
 //		return entityManager.merge(entity);

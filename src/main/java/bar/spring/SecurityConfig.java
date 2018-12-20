@@ -14,6 +14,11 @@ public class SecurityConfig {
 		SecurityService securityService = new SecurityService();
 		securityService.setPermissions("registerEmployeeForm", Role.MANAGER);
 		securityService.setPermissions("registerEmployeeSubmit", Role.MANAGER);
+		securityService.setPermissions("order", Role.MANAGER, Role.SERVER);
+		securityService.setPermissions("getWaitingOrders", Role.MANAGER, Role.BARTENDER, Role.SERVER);
+		securityService.setPermissions("getAcceptedOrders", Role.MANAGER, Role.BARTENDER);
+		securityService.setPermissions("acceptOrder", Role.MANAGER, Role.BARTENDER);
+		securityService.setPermissions("printBill", Role.MANAGER, Role.BARTENDER);
 		
 		return securityService;
 	}

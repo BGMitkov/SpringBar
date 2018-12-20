@@ -9,23 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Item implements Serializable{
-	
+public class Item implements Serializable {
+
 	private static final long serialVersionUID = 7309067095122952489L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private Long id;
 	private String name;
-	private String price;
+	private int price;
 	private String type;
 	private String description;
 
 	public Item() {
-		// TODO Auto-generated constructor stub
 	}
-	
-	public Item(String name, String price, String type, String description) {
+
+	public Item(String name, int price, String type, String description) {
 		this.name = name;
 		this.price = price;
 		this.type = type;
@@ -40,7 +39,7 @@ public class Item implements Serializable{
 		return name;
 	}
 
-	public String getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
@@ -54,9 +53,8 @@ public class Item implements Serializable{
 
 	@Override
 	public String toString() {
-		// TODO make it fancier
-		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", type=" + type
-		        + ", description=" + description + "]";
+		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", type=" + type + ", description="
+				+ description + "]";
 	}
 
 	@Override

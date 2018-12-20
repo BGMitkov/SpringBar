@@ -34,12 +34,15 @@ public class UserServiceInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		HandlerMethod method = (HandlerMethod) handler;
-		String name = method.getMethod().getName();
-		logger.info("Method name {}", name);
-		RequestMapping mapping = (RequestMapping) method.getMethodAnnotation(RequestMapping.class);
-
-		String string = Arrays.toString(mapping.value());
-		logger.info("Request to {}", string.substring(1, string.length() - 1));
+		String methodName = method.getMethod().getName();
+		logger.info("Method name {}", methodName);
+		if(!securityService.checkPermission(methodName)) {
+			return false;
+		}
+//		RequestMapping mapping = (RequestMapping) method.getMethodAnnotation(RequestMapping.class);
+//
+//		String string = Arrays.toString(mapping.value());
+//		logger.info("Request to {}", string.substring(1, string.length() - 1));
 		return true;
 	}
 
@@ -47,6 +50,7 @@ public class UserServiceInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		logger.info("Post handle method is Calling");
+		
 		modelAndView.addObject(APPLICATION_NAME, applicationName);
 		modelAndView.addObject(User.PROPERTY_NAME, securityService.getUserName());
 	}

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "USER")
 public class User {
 	public final static String PROPERTY_NAME = "name";
 	public final static String PROPERTY_EMAIL = "email";

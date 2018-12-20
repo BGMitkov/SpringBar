@@ -43,7 +43,12 @@ public class UserContext {
 		logger.info("getName(): {}", user.getName());
 		return user.getName();
 	}
-	
+
+	public User getUser() {
+		logger.info("getUser(): {}", user.getName());
+		return user;
+	}
+
 	public Role getRole() {
 		return user.getRole();
 	}

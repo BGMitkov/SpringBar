@@ -22,8 +22,13 @@
 		location="/resources/" />
 	<mvc:annotation-driven />
 	<mvc:interceptors>
-		<bean id="UserServiceInterceptor"
-			class="bar.interceptor.UserServiceInterceptor" />
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/resources/**"/>
+			<bean id="UserServiceInterceptor"
+				class="bar.interceptor.UserServiceInterceptor" />
+		</mvc:interceptor>
+
 	</mvc:interceptors>
 
 </beans>
