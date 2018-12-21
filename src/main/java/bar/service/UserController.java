@@ -23,8 +23,8 @@ public class UserController {
 	@Autowired
 	private SecurityService securityService;
 
-	@GetMapping("/registerEmployee")
-	public String registerEmployeeForm(Model model) {
+	@GetMapping("/view/registerEmployee")
+	public String registerEmployeeForm() {
 		logger.info("Request for register employee form.");
 		return "registerEmployee";
 	}
