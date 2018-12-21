@@ -37,7 +37,7 @@ public class UserController {
 		return view;
 	}
 
-	@GetMapping("/login")
+	@GetMapping("/view/login")
 	public ModelAndView loginForm() {
 		logger.info("Request for login form");
 		return new ModelAndView("login", "command", new UserDTO());

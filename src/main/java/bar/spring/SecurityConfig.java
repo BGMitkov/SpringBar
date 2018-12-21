@@ -12,7 +12,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityService getSecurityService() {
 		SecurityService securityService = new SecurityService();
-		securityService.setPermissions("registerEmployeeForm", Role.MANAGER);
+		securityService.setPermissions("/view/registerEmployeeForm", Role.MANAGER);
 		securityService.setPermissions("registerEmployeeSubmit", Role.MANAGER);
 		securityService.setPermissions("order", Role.MANAGER, Role.SERVER);
 		securityService.setPermissions("getWaitingOrders", Role.MANAGER, Role.BARTENDER, Role.SERVER);

@@ -1,6 +1,7 @@
 package bar.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,8 +20,10 @@ import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +38,8 @@ import org.springframework.web.servlet.ModelAndView;
 import bar.SpringBarApplication;
 import bar.model.Role;
 import bar.model.User;
+import bar.service.SecurityService;
+import bar.service.UserContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
@@ -47,14 +52,15 @@ public class UserControllerTest extends AbstractTest {
 	private WebApplicationContext wac;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	private MockMvc mockMvc;
+	@MockBean
+	private UserContext userContext;
 
 	@Override
 	@Before
 	public void setup() {
 		super.setup();
-//		this.session = new MockHttpSession();
+		this.session = new MockHttpSession();
+		
 	}
 
 	@Test
@@ -63,32 +69,41 @@ public class UserControllerTest extends AbstractTest {
 
 	@Test
 	public final void whenRegisterIsSuccessful_thenNoExceptions() throws Exception {
-		User testUser = new User("regtest", passwordEncoder.encode("regtest"), "regtest@test.test", Role.MANAGER,
-				"02:00:00 1/1/1970");
-
-		String uri = "/registerUser";
-
-		MvcResult mvcResult = this.mockMvc.perform(post("/registerUser")
-				.contentType("application/x-www-form-urlencoded").param("name", "regtest").param("password", "regtest")
-				.param("email", "regtest@test.test").param("role", "MANAGER").param("birthDate", "02:00:00 1/1/1970"))
+//		User testUser = new User("regtest", passwordEncoder.encode("regtest"), "regtest@test.test", Role.MANAGER,
+//				"02:00:00 1/1/1970");
+//
+//		String uri = "/registerUser";
+		when(userContext.getRole()).thenReturn(Role.MANAGER);
+		MvcResult mvcResult = this.mvc.perform(post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
+				.param("name", "regtest").param("password", "regtest").param("email", "regtest@test.test")
+				.param("role", "MANAGER").param("birthDate", "1970/1/1")).andExpect(status().isOk())
 				.andReturn();
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(200, status);
+
 		ModelAndView mav = mvcResult.getModelAndView();
+
 		assertViewName(mav, "registeredUser");
 		assertModelAttributeAvailable(mav, "user");
 		assertModelAttributeAvailable(mav, "applicationName");
 		ModelAndViewAssert.assertModelAttributeValue(mav, "applicationName", "Simple Bar Management Default");
 	}
 
+	@Test
 	public final void whenRegisterFormViewIsRequested_thenNoExceptions() throws Exception {
-		MvcResult mvcResult = this.mockMvc.perform(get("/view/registerEmployee")
-				.accept(MediaType.APPLICATION_FORM_URLENCODED).characterEncoding("UTF-8").secure(true))
-				.andExpect(status().isOk()).andReturn();
+		when(userContext.getRole()).thenReturn(Role.MANAGER);
+		MvcResult mvcResult = mvc.perform(get("/view/registerEmployee")).andExpect(status().isOk()).andReturn();
 
 		ModelAndView modelAndView = mvcResult.getModelAndView();
 
 		assertViewName(modelAndView, "registerEmployee");
+	}
+
+	@Test
+	public void whenLoginFormIsRequested_thenNoException() throws Exception {
+		MvcResult mvcResult = this.mvc.perform(get("/view/login")).andExpect(status().isOk()).andReturn();
+
+		ModelAndView modelAndView = mvcResult.getModelAndView();
+
+		assertViewName(modelAndView, "login");
 	}
 
 }

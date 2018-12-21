@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+@Entity
 public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +30,6 @@ public class Order {
 	private long acceptanceDate;
 	private int totalPrice;
 	@ManyToOne
-	@JoinColumn(name = "bill_id")
 	private Bill bill;
 
 	public Order() {

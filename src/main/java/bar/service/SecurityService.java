@@ -20,7 +20,6 @@ import bar.model.User;
  * @author bgmitkov
  *
  */
-@Service
 public class SecurityService {
 	private static final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 	@Autowired

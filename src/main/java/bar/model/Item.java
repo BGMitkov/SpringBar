@@ -1,12 +1,14 @@
 package bar.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Item implements Serializable {
@@ -20,7 +22,11 @@ public class Item implements Serializable {
 	private int price;
 	private String type;
 	private String description;
+	@ManyToMany(mappedBy = "items")
+	private List<Order> orders;
 
+	
+	
 	public Item() {
 	}
 

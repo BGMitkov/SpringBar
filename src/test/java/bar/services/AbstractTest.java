@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,11 +25,13 @@ import bar.SpringBarApplication;
 @SpringBootTest(classes = SpringBarApplication.class)
 @WebAppConfiguration
 public abstract class AbstractTest {
+	
 	protected MockMvc mvc;
 	@Autowired
 	WebApplicationContext webApplicationContext;
 
-	protected void setup() {
+	@Before
+	public void setup() {
 		mvc = webAppContextSetup(webApplicationContext).build();
 	}
 
