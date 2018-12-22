@@ -48,10 +48,10 @@ public class UserController {
 		return securityService.authenticate(user) ? "index" : "invalidCredentials";
 	}
 
-	@GetMapping("/logout")
-	public String logout() {
-		logger.info("Request for logout by: {}", securityService.getUserName());
+	@GetMapping("/signout")
+	public String signout() {
+		logger.info("Request for signout by: {}", securityService.getUserName());
 		securityService.signout();
-		return "redirect:login";
+		return "redirect:/login";
 	}
 }

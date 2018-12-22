@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.ModelAndView;
 
 import bar.SpringBarApplication;
@@ -103,5 +104,11 @@ public class UserControllerTest extends AbstractTest {
 		ModelAndView mav = mvcResult.getModelAndView();
 
 		assertViewName(mav, "invalidCredentials");
+	}
+
+	@Test
+	public void whenLogoutRequest_thenNoException() throws Exception {
+		this.mvc.perform(get("/signout")).andExpect(status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
 	}
 }
