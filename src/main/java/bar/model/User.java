@@ -1,13 +1,26 @@
 package bar.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
+import org.hibernate.validator.constraints.Length;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnCloudPlatform;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import bar.annotation.HasLowerCaseCharacter;
+import bar.annotation.UserNameConstraint;
+import net.bytebuddy.implementation.bind.annotation.Empty;
 
 @Entity
 @Table(name = "USER")
@@ -19,21 +32,32 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Column(unique = true)
+	@NotEmpty(message = "*Please provide your username")
+	@UserNameConstraint(message = "*The username contains invalid characters")
 	private String name;
+	@HasLowerCaseCharacter
 	private String password;
 	@Column(unique = true)
+	@Email(message = "*Please provide a valid Email")
+	@NotEmpty(message = "*Please provide an email")
 	private String email;
 	@Column(length = 10)
+	@NotNull(message = "*Please select a role")
 	private Role role;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String birthDate;
+	@DateTimeFormat(iso = ISO.DATE)
+	@NotNull(message = "*Please select your birthdate")
+	@Past
+	private LocalDate birthDate;
 
-	public User(String name, String password, String email, Role role, String birthDate) {
+	public User(String name, String password, String email, Role role, LocalDate birthDate) {
 		this.name = name;
 		this.password = password;
 		this.email = email;
 		this.role = role;
 		this.birthDate = birthDate;
+	}
+
+	public User() {
 	}
 
 	public Long getId() {
@@ -64,10 +88,14 @@ public class User {
 		return role;
 	}
 
-	public String getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -78,10 +106,6 @@ public class User {
 
 	public void setRole(Role role) {
 		this.role = role;
-	}
-
-	public void setBirthDate(String birthDate) {
-		this.birthDate = birthDate;
 	}
 
 	@Override

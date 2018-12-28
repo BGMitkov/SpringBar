@@ -14,8 +14,10 @@
 	<form:form method="POST" modelAttribute="user"
 		action="/SpringBar/registerEmployeeSubmit">
 		<div class="form-group">
-			<label for="userName">Username:</label> <input type="text"
-				class="form-control" name="name" id="userName" value="">
+			<label for="userName">Username:</label>
+			<form:input type="text" path="name" class="form-control" name="name"
+				id="userName" value="" />
+			<form:errors path="name" cssClass="error" />
 		</div>
 		<div class="form-group">
 			<label for="pwd">Password:</label> <input type="password"

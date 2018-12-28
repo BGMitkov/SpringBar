@@ -1,10 +1,14 @@
 package bar.service;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +27,17 @@ public class UserController {
 	private SecurityService securityService;
 
 	@GetMapping("/view/registerEmployee")
-	public String registerEmployeeForm() {
+	public String registerEmployeeForm(Model model) {
 		logger.info("Request for register employee form.");
+		model.addAttribute("user", new User());
 		return "registerEmployee";
 	}
 
 	@RequestMapping(value = "/registerEmployeeSubmit", method = RequestMethod.POST)
-	public String registerUser(@ModelAttribute("user") User user, ModelMap model) {
+	public String registerUser(@ModelAttribute("user") @Valid User user, ModelMap model, BindingResult result) {
+		if(result.hasErrors()) {
+			return "registerEmployee";
+		}
 		String view = securityService.register(user);
 		user.setPassword(null);
 		model.addAttribute(user);

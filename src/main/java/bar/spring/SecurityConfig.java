@@ -12,13 +12,13 @@ public class SecurityConfig {
 	@Bean
 	public SecurityService getSecurityService() {
 		SecurityService securityService = new SecurityService();
-		securityService.setPermissions("/view/registerEmployeeForm", Role.MANAGER);
-		securityService.setPermissions("registerEmployeeSubmit", Role.MANAGER);
-		securityService.setPermissions("order", Role.MANAGER, Role.SERVER);
-		securityService.setPermissions("getWaitingOrders", Role.MANAGER, Role.BARTENDER, Role.SERVER);
-		securityService.setPermissions("getAcceptedOrders", Role.MANAGER, Role.BARTENDER);
-		securityService.setPermissions("acceptOrder", Role.MANAGER, Role.BARTENDER);
-		securityService.setPermissions("printBill", Role.MANAGER, Role.BARTENDER);
+		securityService.setPermissions("/SpringBar/view/registerEmployee", Role.MANAGER);
+		securityService.setPermissions("/SpringBar/registerEmployeeSubmit", Role.MANAGER);
+		securityService.setPermissions("/SpringBar/order", Role.MANAGER, Role.SERVER);
+		securityService.setPermissions("/SpringBar/getWaitingOrders", Role.MANAGER, Role.BARTENDER, Role.SERVER);
+		securityService.setPermissions("/SpringBar/getAcceptedOrders", Role.MANAGER, Role.BARTENDER);
+		securityService.setPermissions("/SpringBar/acceptOrder", Role.MANAGER, Role.BARTENDER);
+		securityService.setPermissions("/SpringBar/printBill", Role.MANAGER, Role.BARTENDER);
 		
 		return securityService;
 	}

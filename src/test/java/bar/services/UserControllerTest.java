@@ -1,13 +1,20 @@
 package bar.services;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.time.LocalDate;
+
+import javax.swing.text.View;
+
+import org.hibernate.validator.internal.engine.ValidatorFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +24,13 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.ModelAndView;
 
 import bar.SpringBarApplication;
 import bar.dto.UserDTO;
+import bar.model.Role;
 import bar.model.User;
 import bar.service.SecurityService;
 
@@ -36,12 +45,19 @@ public class UserControllerTest extends AbstractTest {
 	private SecurityService securityService;
 	@MockBean
 	private User user;
+	private MockHttpServletRequestBuilder request;
 
 	@Override
 	@Before
 	public void setup() {
 		super.setup();
 		this.session = new MockHttpSession();
+		this.user = new User("registrationTest", "registrationTEST1@", "regtest@test.test", Role.SERVER,
+				LocalDate.of(2018, 1, 1));
+		request = post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
+				.param("name", "registrationTest").param("password", "registrationTEST1@")
+				.param("email", "regtest@test.test").param("role", "SERVER").param("birthDate", "2017-01-01");
+
 	}
 
 	@Test
@@ -51,10 +67,11 @@ public class UserControllerTest extends AbstractTest {
 	@Test
 	public final void whenRegisterIsSuccessful_thenNoExceptions() throws Exception {
 		when(securityService.register(any(User.class))).thenReturn("registeredUser");
+		when(securityService.checkPermission(anyString())).thenReturn(true);
 		MvcResult mvcResult = this.mvc
 				.perform(post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
-						.param("name", "regtest").param("password", "regtest").param("email", "regtest@test.test")
-						.param("role", "MANAGER").param("birthDate", "1970/1/1"))
+						.param("name", "registrationTest").param("password", "regtest")
+						.param("email", "regtest@test.test").param("role", "MANAGER").param("birthDate", "2017-01-01"))
 				.andExpect(status().isOk()).andReturn();
 
 		ModelAndView mav = mvcResult.getModelAndView();
@@ -110,5 +127,35 @@ public class UserControllerTest extends AbstractTest {
 	public void whenLogoutRequest_thenNoException() throws Exception {
 		this.mvc.perform(get("/signout")).andExpect(status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+	}
+
+	@Test
+	public void whenRegistering_userNameInvalid_noException() throws Exception {
+		user.setName("");
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	@Test
+	public void whenEmptyPassword_passwordInvalid_noException() throws Exception {
+		user.setPassword("");
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	@Test
+	public void whenNoLowerCaseCharacter_passwordInvalid_noException() throws Exception {
+		user.setPassword("TEST");
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	@Test
+	void whenNoUpperCaseCharacter_passwordInvalid_noException() throws Exception {
+		user.setPassword("test");
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	private MockHttpServletRequestBuilder buildPostRequest(User user) {
+		return post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
+				.param("name", user.getName()).param("password", user.getPassword()).param("email", user.getEmail())
+				.param("role", user.getRole().toString()).param("birthDate", user.getBirthDate().toString());
 	}
 }

@@ -34,12 +34,13 @@ public class SecurityService {
 		permissions = new HashMap<>();
 	}
 
-	public boolean checkPermission(String methodMapping) {
-		Set<Role> set = permissions.get(methodMapping);
+	public boolean checkPermission(String uri) {
+		Set<Role> set = permissions.get(uri);
 		if (set == null) {
 			return true;
 		}
-		if (set.contains(userContext.getRole())) {
+	
+		if (userContext.isAuthenticated() && set.contains(userContext.getRole())) {
 			return true;
 		}
 
@@ -67,8 +68,8 @@ public class SecurityService {
 	}
 
 	public boolean authenticate(UserDTO user) {
-		User storedUser = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
-
+//		User storedUser = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
+		User storedUser = userDAO.findByName(user.getName());
 		if (storedUser == null || !passwordEncoder.matches(user.getPassword(), storedUser.getPassword())) {
 			return false;
 		}
@@ -83,8 +84,10 @@ public class SecurityService {
 	 */
 	public String register(User user) {
 		logger.info("Request for register user");
-		User userWithName = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
-		User userWithEmail = userDAO.findByProperty(User.PROPERTY_EMAIL, user.getEmail());
+//		User userWithName = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
+		User userWithName = userDAO.findByName(user.getName());
+//		User userWithEmail = userDAO.findByProperty(User.PROPERTY_EMAIL, user.getEmail());
+		User userWithEmail = userDAO.findByEmail(user.getEmail());
 
 		if (userWithName != null) {
 			return "nameConflict";
@@ -94,7 +97,7 @@ public class SecurityService {
 		}
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		userDAO.create(user);
+		userDAO.save(user);
 
 		return "registeredUser";
 	}
