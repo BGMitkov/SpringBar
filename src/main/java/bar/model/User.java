@@ -19,6 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import bar.annotation.HasLowerCaseCharacter;
+import bar.annotation.HasUpperCaseChar;
 import bar.annotation.UserNameConstraint;
 import net.bytebuddy.implementation.bind.annotation.Empty;
 
@@ -36,6 +37,7 @@ public class User {
 	@UserNameConstraint(message = "*The username contains invalid characters")
 	private String name;
 	@HasLowerCaseCharacter
+	@HasUpperCaseChar
 	private String password;
 	@Column(unique = true)
 	@Email(message = "*Please provide a valid Email")

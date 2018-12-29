@@ -54,25 +54,21 @@ public class UserControllerTest extends AbstractTest {
 		this.session = new MockHttpSession();
 		this.user = new User("registrationTest", "registrationTEST1@", "regtest@test.test", Role.SERVER,
 				LocalDate.of(2018, 1, 1));
-		request = post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
-				.param("name", "registrationTest").param("password", "registrationTEST1@")
-				.param("email", "regtest@test.test").param("role", "SERVER").param("birthDate", "2017-01-01");
+//		request = post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
+//				.param("name", "registrationTest").param("password", "registrationTEST1@")
+//				.param("email", "regtest@test.test").param("role", "SERVER").param("birthDate", "2017-01-01");
 
 	}
 
 	@Test
-	public final void whenContextIsBootstrapped_thenNoExceptions() {
+	public void whenContextIsBootstrapped_thenNoExceptions() {
 	}
 
 	@Test
-	public final void whenRegisterIsSuccessful_thenNoExceptions() throws Exception {
+	public void whenRegisterIsSuccessful_thenNoExceptions() throws Exception {
 		when(securityService.register(any(User.class))).thenReturn("registeredUser");
 		when(securityService.checkPermission(anyString())).thenReturn(true);
-		MvcResult mvcResult = this.mvc
-				.perform(post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
-						.param("name", "registrationTest").param("password", "regtest")
-						.param("email", "regtest@test.test").param("role", "MANAGER").param("birthDate", "2017-01-01"))
-				.andExpect(status().isOk()).andReturn();
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isOk()).andReturn();
 
 		ModelAndView mav = mvcResult.getModelAndView();
 
@@ -143,13 +139,19 @@ public class UserControllerTest extends AbstractTest {
 
 	@Test
 	public void whenNoLowerCaseCharacter_passwordInvalid_noException() throws Exception {
-		user.setPassword("TEST");
+		user.setPassword("TEST1@");
 		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
-	void whenNoUpperCaseCharacter_passwordInvalid_noException() throws Exception {
-		user.setPassword("test");
+	public void whenNoUpperCaseCharacter_passwordInvalid_noException() throws Exception {
+		user.setPassword("test1@");
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	@Test
+	public void whenNoDigit_passwordInvalid_noException() throws Exception {
+		user.setPassword("tesT@");
 		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
