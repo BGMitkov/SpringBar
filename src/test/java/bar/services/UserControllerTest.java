@@ -8,13 +8,8 @@ import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import java.time.LocalDate;
 
-import javax.swing.text.View;
-
-import org.hibernate.validator.internal.engine.ValidatorFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -152,6 +147,12 @@ public class UserControllerTest extends AbstractTest {
 	@Test
 	public void whenNoDigit_passwordInvalid_noException() throws Exception {
 		user.setPassword("tesT@");
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	@Test
+	public void whenNoSpecialSymbol_passwordInvalid_noException() throws Exception {
+		user.setPassword("testT1");
 		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
