@@ -10,23 +10,23 @@
     <table>
         <tr>
             <td>id</td>
-            <td>${id}</td>
+            <td>${item.id}</td>
         </tr>
         <tr>
             <td>Name</td>
-            <td>${name}</td>
+            <td>${item.name}</td>
         </tr>
         <tr>
             <td>description</td>
-            <td>${description}</td>
+            <td>${item.description}</td>
         </tr>
         <tr>
             <td>price</td>
-            <td>${price}</td>
+            <td>${item.price}</td>
         </tr>
         <tr>
             <td>type</td>
-            <td>${type}</td>
+            <td>${item.type.name}</td>
         </tr>
     </table>
 </body>

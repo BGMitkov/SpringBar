@@ -1,7 +1,10 @@
 package bar.service;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import bar.dao.UserDAO;
 import bar.dto.UserDTO;
-import bar.model.Role;
+import bar.model.EmployeeRole;
 import bar.model.User;
 
 /**
@@ -28,31 +31,28 @@ public class SecurityService {
 	private UserDAO userDAO;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	private Map<String, Set<Role>> permissions;
+	private Map<String, Set<EmployeeRole>> permissions;
 
 	public SecurityService() {
 		permissions = new HashMap<>();
 	}
 
 	public boolean checkPermission(String uri) {
-		Set<Role> set = permissions.get(uri);
+		Set<EmployeeRole> set = permissions.get(uri);
 		if (set == null) {
 			return true;
 		}
-	
-		if (userContext.isAuthenticated() && set.contains(userContext.getRole())) {
+
+		if (userContext.isAuthenticated() && set.contains(userContext.getEmployeeRole())) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public void setPermissions(String methodName, Role... permissions) {
-		Set<Role> setPermissions = EnumSet.noneOf(Role.class);
-		for (int i = 0; i < permissions.length; i++) {
-			setPermissions.add(permissions[i]);
-		}
-		this.permissions.put(methodName, setPermissions);
+	public void setPermissions(String uri, EmployeeRole... permissions) {
+		Set<EmployeeRole> setPermissions = new HashSet<>(Arrays.asList(permissions));
+		this.permissions.put(uri, setPermissions);
 	}
 
 	public String getUserName() {

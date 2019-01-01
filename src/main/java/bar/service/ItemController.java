@@ -9,48 +9,50 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import bar.dao.ItemDAO;
+import bar.dao.ItemTypeDAO;
+import bar.dto.ItemDTO;
 import bar.exception.SpringException;
 import bar.model.Item;
-import bar.model.Role;
+import bar.model.ItemType;
 
 @Controller
 public class ItemController {
 
-	/*@Autowired
+	@Autowired
 	private ItemDAO itemDAO;
+	@Autowired
+	private ItemTypeDAO itemTypeDAO;
 	@Autowired
 	private UserContext userContext;
 
 	// TODO add user context filter
-	@RequestMapping(value = "/item", method = RequestMethod.GET)
+	@RequestMapping(value = "/addItemForm", method = RequestMethod.GET)
 	public ModelAndView item() {
-		return new ModelAndView("item", "command", new Item());
+		return new ModelAndView("addItem", "command", new Item());
 	}
 
 	@RequestMapping(value = "/addItem", method = RequestMethod.POST)
-	public String addItem(@ModelAttribute("Added Item") Item item, ModelMap model) {
-		if (!userContext.isUserInRole(Role.MANAGER)) {
-			throw new SpringException("Unauthorized request!");
-		}
-
-//		itemDAO.addItem(item);
-		model.addAttribute("id", item.getId());
-		model.addAttribute("name", item.getName());
-		model.addAttribute("description", item.getDescription());
-		model.addAttribute("price", item.getPrice());
-		model.addAttribute("type", item.getType());
-
+	public String addItem(@ModelAttribute("Added Item") ItemDTO itemDTO, ModelMap model) {
+		itemDAO.save(getItem(itemDTO));
+		Item storedItem = itemDAO.findByName(itemDTO.getName());
+		model.addAttribute(storedItem);
 		return "addedItem";
+	}
+
+	private Item getItem(ItemDTO itemDTO) {
+		ItemType itemType = itemTypeDAO.findByName(itemDTO.getType());
+		Item item = new Item(itemDTO.getName(), itemDTO.getPrice(), itemType, itemDTO.getDescription());
+		return item;
 	}
 
 	@RequestMapping(value = "/items", method = RequestMethod.GET)
 	public String getItems(ModelMap modelMap) {
-		if (!userContext.isUserInRole(Role.MANAGER, Role.SERVER)) {
-			return "unauthorized";
-		}
-		
+//		if (!userContext.isUserInRole(Role.MANAGER, Role.SERVER)) {
+//			return "unauthorized";
+//		}
+
 //		modelMap.addAllAttributes(itemDAO.getItems());
-		 
+
 		return "items";
-	}*/
+	}
 }

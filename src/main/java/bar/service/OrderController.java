@@ -17,7 +17,6 @@ import bar.dao.OrderDAO;
 import bar.model.Bill;
 import bar.model.BillStatus;
 import bar.model.Order;
-import bar.model.Role;
 import bar.model.OrderStatus;
 
 @Controller

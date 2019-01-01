@@ -8,11 +8,14 @@ import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import java.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
@@ -24,8 +27,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.ModelAndView;
 
 import bar.SpringBarApplication;
+import bar.dao.EmployeeRoleDAO;
 import bar.dto.UserDTO;
-import bar.model.Role;
 import bar.model.User;
 import bar.service.SecurityService;
 
@@ -34,21 +37,22 @@ import bar.service.SecurityService;
 @WebAppConfiguration
 public class UserControllerTest extends AbstractTest {
 
-	MockHttpSession session;
+//	MockHttpSession session;
 
 	@MockBean
 	private SecurityService securityService;
 	@MockBean
 	private User user;
-	private MockHttpServletRequestBuilder request;
+	@Autowired
+	private EmployeeRoleDAO employeeRoleDAO;
 
 	@Override
 	@Before
 	public void setup() {
 		super.setup();
-		this.session = new MockHttpSession();
-		this.user = new User("registrationTest", "registrationTEST1@", "regtest@test.test", Role.SERVER,
-				LocalDate.of(2018, 1, 1));
+//		this.session = new MockHttpSession();
+		this.user = new User("registrationTest", "registrationTEST1@", "regtest@test.test",
+				employeeRoleDAO.findByName("server"), LocalDate.of(2018, 1, 1));
 //		request = post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
 //				.param("name", "registrationTest").param("password", "registrationTEST1@")
 //				.param("email", "regtest@test.test").param("role", "SERVER").param("birthDate", "2017-01-01");
@@ -74,11 +78,8 @@ public class UserControllerTest extends AbstractTest {
 	@Test
 	public final void whenRegisterFormViewIsRequested_thenNoExceptions() throws Exception {
 		when(securityService.checkPermission("/view/registerEmployee")).thenReturn(true);
-		MvcResult mvcResult = mvc.perform(get("/view/registerEmployee")).andExpect(status().isOk()).andReturn();
-
-		ModelAndView modelAndView = mvcResult.getModelAndView();
-
-		assertViewName(modelAndView, "registerEmployee");
+		mvc.perform(get("/view/registerEmployee")).andExpect(status().isOk()).andExpect(view().name("registerEmployee"))
+				.andReturn();
 	}
 
 	@Test
@@ -123,42 +124,42 @@ public class UserControllerTest extends AbstractTest {
 	@Test
 	public void whenRegistering_userNameInvalid_noException() throws Exception {
 		user.setName("");
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenEmptyPassword_passwordInvalid_noException() throws Exception {
 		user.setPassword("");
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoLowerCaseCharacter_passwordInvalid_noException() throws Exception {
 		user.setPassword("TEST1@");
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoUpperCaseCharacter_passwordInvalid_noException() throws Exception {
 		user.setPassword("test1@");
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoDigit_passwordInvalid_noException() throws Exception {
 		user.setPassword("tesT@");
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoSpecialSymbol_passwordInvalid_noException() throws Exception {
 		user.setPassword("testT1");
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	private MockHttpServletRequestBuilder buildPostRequest(User user) {
 		return post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
 				.param("name", user.getName()).param("password", user.getPassword()).param("email", user.getEmail())
-				.param("role", user.getRole().toString()).param("birthDate", user.getBirthDate().toString());
+				.param("role", user.getEmployeeRole().getName()).param("birthDate", user.getBirthDate().toString());
 	}
 }

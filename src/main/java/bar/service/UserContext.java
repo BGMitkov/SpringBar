@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
-import bar.model.Role;
+import bar.model.EmployeeRole;
 import bar.model.User;
 
 @Component
@@ -24,14 +24,14 @@ public class UserContext {
 		this.user = user;
 	}
 
-	public boolean isUserInRole(Role... roles) {
+	public boolean isUserInRole(EmployeeRole... roles) {
 		logger.info("User permission check");
 		if (user != null) {
 			return false;
 		}
 
-		for (Role role : roles) {
-			if (user.getRole().equals(role)) {
+		for (EmployeeRole role : roles) {
+			if (user.getEmployeeRole().equals(role)) {
 				return true;
 			}
 		}
@@ -49,7 +49,7 @@ public class UserContext {
 		return user;
 	}
 
-	public Role getRole() {
-		return user.getRole();
+	public EmployeeRole getEmployeeRole() {
+		return user.getEmployeeRole();
 	}
 }

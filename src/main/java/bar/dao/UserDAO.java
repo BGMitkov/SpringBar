@@ -1,13 +1,8 @@
 package bar.dao;
 
-import java.util.List;
-
-import javax.persistence.EntityExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import bar.mapper.UserMapper;
 import bar.model.User;
 
 @Repository

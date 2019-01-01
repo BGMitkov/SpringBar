@@ -4,17 +4,18 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import org.hibernate.validator.constraints.Length;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnCloudPlatform;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -23,16 +24,16 @@ import bar.annotation.HasLowerCaseCharacter;
 import bar.annotation.HasSpecialSymbol;
 import bar.annotation.HasUpperCaseChar;
 import bar.annotation.UserNameConstraint;
-import net.bytebuddy.implementation.bind.annotation.Empty;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "user")
 public class User {
 	public final static String PROPERTY_NAME = "name";
 	public final static String PROPERTY_EMAIL = "email";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
 	private Long id;
 	@Column(unique = true)
 	@NotEmpty(message = "*Please provide your username")
@@ -47,19 +48,20 @@ public class User {
 	@Email(message = "*Please provide a valid Email")
 	@NotEmpty(message = "*Please provide an email")
 	private String email;
-	@Column(length = 10)
-	@NotNull(message = "*Please select a role")
-	private Role role;
+	@NotNull(message = "*Please select an employee role")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employee_role_id")
+	private EmployeeRole employeeRole;
 	@DateTimeFormat(iso = ISO.DATE)
 	@NotNull(message = "*Please select your birthdate")
 	@Past
 	private LocalDate birthDate;
 
-	public User(String name, String password, String email, Role role, LocalDate birthDate) {
+	public User(String name, String password, String email, EmployeeRole employeeRole, LocalDate birthDate) {
 		this.name = name;
 		this.password = password;
 		this.email = email;
-		this.role = role;
+		this.employeeRole = employeeRole;
 		this.birthDate = birthDate;
 	}
 
@@ -90,8 +92,8 @@ public class User {
 		return email;
 	}
 
-	public Role getRole() {
-		return role;
+	public EmployeeRole getEmployeeRole() {
+		return employeeRole;
 	}
 
 	public LocalDate getBirthDate() {
@@ -110,14 +112,14 @@ public class User {
 		this.email = email;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setEmployeeRole(EmployeeRole role) {
+		this.employeeRole = role;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", password=" + password + ", email=" + email + ", role=" + role
-				+ ", birthDate=" + birthDate + "]";
+		return "User [id=" + id + ", name=" + name + ", password=" + password + ", email=" + email + ", employeeRole="
+				+ employeeRole + ", birthDate=" + birthDate + "]";
 	}
 
 	@Override
@@ -129,7 +131,7 @@ public class User {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((employeeRole == null) ? 0 : employeeRole.hashCode());
 		return result;
 	}
 
@@ -167,7 +169,7 @@ public class User {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (role != other.role)
+		if (employeeRole != other.employeeRole)
 			return false;
 		return true;
 	}
