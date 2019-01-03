@@ -1,8 +1,75 @@
 package bar.dto;
 
+import java.time.LocalDate;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import bar.annotation.ExistsInDataBase;
+import bar.annotation.HasDigit;
+import bar.annotation.HasLowerCaseCharacter;
+import bar.annotation.HasSpecialSymbol;
+import bar.annotation.HasUpperCaseChar;
+import bar.annotation.UserNameConstraint;
+
 public class UserDTO {
+	@UserNameConstraint(message = "*The username contains invalid characters")
 	private String name;
+	@HasLowerCaseCharacter
+	@HasUpperCaseChar
+	@HasDigit
+	@HasSpecialSymbol
 	private String password;
+	@Email(message = "*Please provide a valid Email")
+	@NotEmpty(message = "*Please provide an email")
+	private String email;
+	@NotEmpty(message = "*Please select an employee role")
+	@ExistsInDataBase
+	private String employeeRole;
+	@DateTimeFormat(iso = ISO.DATE)
+	@NotNull(message = "*Please select your birthdate")
+	@Past
+	private LocalDate birthDate;
+
+	public UserDTO() {
+	}
+
+	public UserDTO(String name, String password, String email, String employeeRole, LocalDate birthDate) {
+		this.name = name;
+		this.password = password;
+		this.email = email;
+		this.employeeRole = employeeRole;
+		this.birthDate = birthDate;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmployeeRole() {
+		return employeeRole;
+	}
+
+	public void setEmployeeRole(String employeeRole) {
+		this.employeeRole = employeeRole;
+	}
+
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
 
 	public String getName() {
 		return name;

@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import bar.dao.PermissionDAO;
 import bar.dao.UserDAO;
 import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
+import bar.model.Permission;
 import bar.model.User;
 
 /**
@@ -31,28 +33,41 @@ public class SecurityService {
 	private UserDAO userDAO;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	private Map<String, Set<EmployeeRole>> permissions;
+	@Autowired
+	private PermissionDAO permissionDAO;
+
+//	private Map<String, Set<EmployeeRole>> permissions;
 
 	public SecurityService() {
-		permissions = new HashMap<>();
+//		permissions = new HashMap<>();
 	}
 
+	/**
+	 * Given a uri returns true or false on whether the currently signed in user has
+	 * permission to access the service mapped by the given uri. If there is not
+	 * permission object for a given uri then access is not restricted
+	 * 
+	 * @param uri mapped to a service
+	 * @return whether access is permitted
+	 */
 	public boolean checkPermission(String uri) {
-		Set<EmployeeRole> set = permissions.get(uri);
-		if (set == null) {
+		if (uri == null) {
+			return false;
+		}
+
+		Permission permission = permissionDAO.findByUri(uri);
+
+		if (permission == null) {
 			return true;
 		}
 
-		if (userContext.isAuthenticated() && set.contains(userContext.getEmployeeRole())) {
-			return true;
-		}
-
-		return false;
+		return userContext.isAuthenticated() && permission.hasAccess(userContext.getEmployeeRole());
 	}
 
-	public void setPermissions(String uri, EmployeeRole... permissions) {
-		Set<EmployeeRole> setPermissions = new HashSet<>(Arrays.asList(permissions));
-		this.permissions.put(uri, setPermissions);
+	public void setPermissions(String uri, EmployeeRole... employeeRoles) {
+//		Set<EmployeeRole> setPermissions = new HashSet<>(Arrays.asList(employeeRoles));
+		Permission permission = new Permission(uri, employeeRoles);
+		permissionDAO.save(permission);
 	}
 
 	public String getUserName() {

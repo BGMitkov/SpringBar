@@ -3,24 +3,29 @@ package bar.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "bill")
 public class Bill {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "bill_id")
 	private long id;
-	@OneToMany(mappedBy = "bill")
+	@OneToMany(mappedBy = "bill", cascade = CascadeType.PERSIST)
 	private List<Order> orders;
-	//TODO make a table model to allow configuration
+	// TODO make a table model to allow configuration
 	private String tableNumber;
 	private int price;
-	//TODO make a model for status so that it can be configurable
+	// TODO make a model for status so that it can be configurable
 	private BillStatus status;
 
 	public Bill(String tableNumber, BillStatus billStatus) {

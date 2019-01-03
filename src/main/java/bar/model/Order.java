@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,15 +14,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "orders")
 public class Order {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	@ManyToMany
-	@JoinTable(name = "order_item", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"))
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "order_id")
+	private long id;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "order_item", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "order_id"), inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "item_id"))
 	private List<Item> items;
+	@Column(name = "tables")
 	private String table;
 	@ManyToOne
 	@JoinColumn(name = "executor_id")
@@ -29,7 +35,8 @@ public class Order {
 	private long orderDate;
 	private long acceptanceDate;
 	private int totalPrice;
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "bill_id")
 	private Bill bill;
 
 	public Order() {
@@ -43,7 +50,7 @@ public class Order {
 		this.totalPrice = 0;
 	}
 
-	public void setId(Long orderId) {
+	public void setId(long orderId) {
 		this.id = orderId;
 	}
 
@@ -67,7 +74,7 @@ public class Order {
 		this.totalPrice = totalPrice;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -127,8 +134,8 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", orderedItems=" + itemsToString() + ", tableNumber=" + table + ", status="
-				+ status + ", orderDate=" + new Date(orderDate).toString() + ", acceptanceDate="
+		return "Order [id=" + id + ", orderedItems=" + itemsToString() + ", tableNumber=" + table + ", status=" + status
+				+ ", orderDate=" + new Date(orderDate).toString() + ", acceptanceDate="
 				+ new Date(acceptanceDate).toString() + ", totalPrice=" + getTotalPrice() + "]";
 	}
 
@@ -144,7 +151,7 @@ public class Order {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 
@@ -157,12 +164,8 @@ public class Order {
 		if (getClass() != obj.getClass())
 			return false;
 		Order other = (Order) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
 		return true;
 	}
-
 }

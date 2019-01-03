@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import bar.SpringBarApplication;
 import bar.model.Item;
@@ -50,9 +51,12 @@ public class ItemControllerTest extends AbstractTest {
 
 	@Test
 	public void addItemTest_isSuccessful_thenNoException() throws Exception {
-		this.mvc.perform(post("/addItem").param("name", item.getName()).param("price", "100")
-				.param("itemType", item.getItemType().toString()).param("description", item.getDescription()))
-				.andExpect(status().isOk()).andExpect(view().name("addedItem"))
+		this.mvc.perform(buildPostRequest(item)).andExpect(status().isOk()).andExpect(view().name("addedItem"))
 				.andExpect(model().attributeExists("item"));
+	}
+
+	private MockHttpServletRequestBuilder buildPostRequest(Item item) {
+		return post("/addItem").param("name", item.getName()).param("price", "100")
+				.param("itemType", item.getItemType().toString()).param("description", item.getDescription());
 	}
 }

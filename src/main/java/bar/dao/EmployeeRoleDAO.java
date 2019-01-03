@@ -8,4 +8,6 @@ import bar.model.EmployeeRole;
 @Repository
 public interface EmployeeRoleDAO extends CrudRepository<EmployeeRole, Byte> {
 	EmployeeRole findByName(String name);
+
+	boolean existsByName(String name);
 }

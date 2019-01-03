@@ -42,7 +42,7 @@ public class UserControllerTest extends AbstractTest {
 	@MockBean
 	private SecurityService securityService;
 	@MockBean
-	private User user;
+	private UserDTO userDTO;
 	@Autowired
 	private EmployeeRoleDAO employeeRoleDAO;
 
@@ -51,12 +51,11 @@ public class UserControllerTest extends AbstractTest {
 	public void setup() {
 		super.setup();
 //		this.session = new MockHttpSession();
-		this.user = new User("registrationTest", "registrationTEST1@", "regtest@test.test",
-				employeeRoleDAO.findByName("server"), LocalDate.of(2018, 1, 1));
+		this.userDTO = new UserDTO("registrationTest", "registrationTEST1@", "regtest@test.test", "server",
+				LocalDate.of(2018, 1, 1));
 //		request = post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
 //				.param("name", "registrationTest").param("password", "registrationTEST1@")
 //				.param("email", "regtest@test.test").param("role", "SERVER").param("birthDate", "2017-01-01");
-
 	}
 
 	@Test
@@ -67,7 +66,8 @@ public class UserControllerTest extends AbstractTest {
 	public void whenRegisterIsSuccessful_thenNoExceptions() throws Exception {
 		when(securityService.register(any(User.class))).thenReturn("registeredUser");
 		when(securityService.checkPermission(anyString())).thenReturn(true);
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(user)).andExpect(status().isOk()).andReturn();
+
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(userDTO)).andExpect(status().isOk()).andReturn();
 
 		ModelAndView mav = mvcResult.getModelAndView();
 
@@ -123,43 +123,64 @@ public class UserControllerTest extends AbstractTest {
 
 	@Test
 	public void whenRegistering_userNameInvalid_noException() throws Exception {
-		user.setName("");
-		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		UserDTO testUser = new UserDTO("", userDTO.getPassword(), userDTO.getEmail(), userDTO.getEmployeeRole(),
+				userDTO.getBirthDate());
+
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenEmptyPassword_passwordInvalid_noException() throws Exception {
-		user.setPassword("");
-		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		UserDTO testUser = new UserDTO(userDTO.getName(), "", userDTO.getEmail(), userDTO.getEmployeeRole(),
+				userDTO.getBirthDate());
+
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoLowerCaseCharacter_passwordInvalid_noException() throws Exception {
-		user.setPassword("TEST1@");
-		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		UserDTO testUser = new UserDTO(userDTO.getName(), "TEST1@", userDTO.getEmail(), userDTO.getEmployeeRole(),
+				userDTO.getBirthDate());
+
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoUpperCaseCharacter_passwordInvalid_noException() throws Exception {
-		user.setPassword("test1@");
-		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		UserDTO testUser = new UserDTO(userDTO.getName(), "test1@", userDTO.getEmail(), userDTO.getEmployeeRole(),
+				userDTO.getBirthDate());
+
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoDigit_passwordInvalid_noException() throws Exception {
-		user.setPassword("tesT@");
-		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		UserDTO testUser = new UserDTO(userDTO.getName(), "tesT@", userDTO.getEmail(), userDTO.getEmployeeRole(),
+				userDTO.getBirthDate());
+
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	@Test
 	public void whenNoSpecialSymbol_passwordInvalid_noException() throws Exception {
-		user.setPassword("testT1");
-		this.mvc.perform(buildPostRequest(user)).andExpect(status().isBadRequest()).andReturn();
+		UserDTO testUser = new UserDTO(userDTO.getName(), "testT1", userDTO.getEmail(), userDTO.getEmployeeRole(),
+				userDTO.getBirthDate());
+
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
 	}
 
-	private MockHttpServletRequestBuilder buildPostRequest(User user) {
+	@Test
+	public void whenEmployeeRoleIsInvalid_noException() throws Exception {
+		UserDTO testUser = new UserDTO(userDTO.getName(), userDTO.getPassword(), userDTO.getEmail(), "invalidRole",
+				userDTO.getBirthDate());
+
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	private MockHttpServletRequestBuilder buildPostRequest(UserDTO userDTO) {
 		return post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
-				.param("name", user.getName()).param("password", user.getPassword()).param("email", user.getEmail())
-				.param("role", user.getEmployeeRole().getName()).param("birthDate", user.getBirthDate().toString());
+				.param("name", userDTO.getName()).param("password", userDTO.getPassword())
+				.param("email", userDTO.getEmail()).param("employeeRole", userDTO.getEmployeeRole())
+				.param("birthDate", userDTO.getBirthDate().toString());
 	}
 }

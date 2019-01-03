@@ -3,6 +3,7 @@ package bar.model;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,19 +37,10 @@ public class User {
 	@Column(name = "user_id")
 	private Long id;
 	@Column(unique = true)
-	@NotEmpty(message = "*Please provide your username")
-	@UserNameConstraint(message = "*The username contains invalid characters")
 	private String name;
-	@HasLowerCaseCharacter
-	@HasUpperCaseChar
-	@HasDigit
-	@HasSpecialSymbol
 	private String password;
 	@Column(unique = true)
-	@Email(message = "*Please provide a valid Email")
-	@NotEmpty(message = "*Please provide an email")
 	private String email;
-	@NotNull(message = "*Please select an employee role")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "employee_role_id")
 	private EmployeeRole employeeRole;
@@ -112,8 +104,8 @@ public class User {
 		this.email = email;
 	}
 
-	public void setEmployeeRole(EmployeeRole role) {
-		this.employeeRole = role;
+	public void setEmployeeRole(EmployeeRole employeeRole) {
+		this.employeeRole = employeeRole;
 	}
 
 	@Override
