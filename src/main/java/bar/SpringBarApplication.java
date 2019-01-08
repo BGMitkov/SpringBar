@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import bar.spring.SpringContextConfig;
 import bar.spring.WebMvcConfig;
@@ -23,4 +26,15 @@ public class SpringBarApplication extends SpringBootServletInitializer {
 		barLogger.info("Application is about to run.");
 		SpringApplication.run(SpringBarApplication.class, args);
 	}
+
+	@Bean
+	public DispatcherServlet dispatcherServlet() {
+		return new DispatcherServlet();
+	}
+
+//	@Bean
+//	public ServletRegistrationBean<DispatcherServlet> dispatcherServletRegistration() {
+//		ServletRegistrationBean<DispatcherServlet> registrationBean = new ServletRegistrationBean<DispatcherServlet>(
+//				dispatcherServlet(), "/");
+//	}
 }

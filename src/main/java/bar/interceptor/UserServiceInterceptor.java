@@ -2,15 +2,12 @@ package bar.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Status;
-
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,13 +26,14 @@ public class UserServiceInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		logger.info("Pre handle method is calling");
-		logger.info("Request Uri: {}", request.getRequestURI());
+		logger.info("Pre handle method is calling for request: {}", request.getRequestURI());
 		if (!securityService.checkPermission(request.getRequestURI())) {
-			response.sendError(HttpStatus.UNAUTHORIZED.value());
+			response.sendRedirect("/SpringBar/view/signIn");
 			return false;
 		}
-		
+		HttpSession session = request.getSession();
+		session.setAttribute(APPLICATION_NAME, applicationName);
+
 		return true;
 
 //		HandlerMethod method = (HandlerMethod) handler;
@@ -54,11 +52,11 @@ public class UserServiceInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		logger.info("Post handle method is Calling");
+		logger.info("Post handle method is Calling for request for: {}", request.getRequestURI());
 		if (modelAndView != null) {
 			modelAndView.addObject(APPLICATION_NAME, applicationName);
-			System.out.println(securityService);
 			modelAndView.addObject(User.PROPERTY_NAME, securityService.getUserName());
+			modelAndView.addObject("role", securityService.getRole());
 		}
 	}
 

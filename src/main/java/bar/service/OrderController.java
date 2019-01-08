@@ -1,7 +1,10 @@
 package bar.service;
 
 import java.util.Date;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import bar.dao.BillDAO;
 import bar.dao.OrderDAO;
@@ -23,6 +27,7 @@ import bar.model.OrderStatus;
 @RequestMapping("/orders")
 public class OrderController {
 
+	private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 	private static final String UNAUTHORIZED = "unauthorized";
 
 	@Autowired
@@ -31,7 +36,6 @@ public class OrderController {
 	private BillDAO billDAO;
 	@Autowired
 	private SecurityService securityService;
-	// TODO make the roles access configurable
 
 	// TODO create OrderDTO
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
@@ -45,13 +49,17 @@ public class OrderController {
 		return "items";
 	}
 
-	// TODO convert to rest
-	@RequestMapping(value = "/waiting", method = RequestMethod.GET)
-	public String getWaitingOrders(ModelMap modelMap) {
-
-		modelMap.addAllAttributes(orderDAO.findByStatus(OrderStatus.WAITING));
-
-		return "orders";
+	// TODO convert to rest - in progress
+	@GetMapping(value = "/orders/{status}", produces = "application/json")
+	public @ResponseBody List<Order> getWaitingOrders(@PathVariable String status) {
+		OrderStatus orderStatus = null;
+		try {
+			orderStatus = OrderStatus.valueOf(status);
+		} catch (IllegalArgumentException e) {
+			log.info("Exception occured in method getWaitingOrders");
+			return null;
+		}
+		return orderDAO.findByStatus(orderStatus);
 	}
 
 	// TODO decide to change the accepted to preparing status

@@ -1,13 +1,5 @@
 package bar.service;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +17,7 @@ import bar.model.User;
  * @author bgmitkov
  *
  */
+@Service
 public class SecurityService {
 	private static final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 	@Autowired
@@ -32,7 +25,7 @@ public class SecurityService {
 	@Autowired
 	private UserDAO userDAO;
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private PasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private PermissionDAO permissionDAO;
 
@@ -51,6 +44,7 @@ public class SecurityService {
 	 * @return whether access is permitted
 	 */
 	public boolean checkPermission(String uri) {
+		logger.info("Permission requested by: {} for {}", userContext.getName(), uri);
 		if (uri == null) {
 			return false;
 		}
@@ -82,15 +76,18 @@ public class SecurityService {
 		return userContext.getUser();
 	}
 
-	public boolean authenticate(UserDTO user) {
-//		User storedUser = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
-		User storedUser = userDAO.findByName(user.getName());
-		if (storedUser == null || !passwordEncoder.matches(user.getPassword(), storedUser.getPassword())) {
-			return false;
+	public boolean authenticate(UserDTO userDTO) {
+		logger.info("authenticate(): " + userDTO.getName());
+
+		User storedUser = userDAO.findByName(userDTO.getName());
+		if (storedUser != null && bCryptPasswordEncoder.matches(userDTO.getPassword(), storedUser.getPassword())) {
+			userContext.setUser(storedUser);
+			logger.info("authenticate(): success");
+			return true;
 		}
 
-		userContext.setUser(storedUser);
-		return true;
+		logger.info("authenticate(): failed");
+		return false;
 	}
 
 	/**
@@ -99,9 +96,7 @@ public class SecurityService {
 	 */
 	public String register(User user) {
 		logger.info("Request for register user");
-//		User userWithName = userDAO.findByProperty(User.PROPERTY_NAME, user.getName());
 		User userWithName = userDAO.findByName(user.getName());
-//		User userWithEmail = userDAO.findByProperty(User.PROPERTY_EMAIL, user.getEmail());
 		User userWithEmail = userDAO.findByEmail(user.getEmail());
 
 		if (userWithName != null) {
@@ -111,10 +106,18 @@ public class SecurityService {
 			return "emailConflict";
 		}
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		userDAO.save(user);
 
 		return "registeredUser";
+	}
+
+	public String getRole() {
+		if (userContext.isAuthenticated()) {
+			return userContext.getEmployeeRole().getName();
+		}
+
+		return "";
 	}
 
 	public void signout() {

@@ -9,11 +9,11 @@ import bar.filter.SimpleFilter;
 import bar.service.SecurityService;
 
 @Configuration
-public class SpringContextConfig{
+public class SpringContextConfig {
 
 	@Bean
-	public PasswordEncoder getPasswordEncoder() {
+	public PasswordEncoder getBCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 }

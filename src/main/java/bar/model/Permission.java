@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,7 +23,7 @@ public class Permission {
 	private long id;
 	@NotEmpty
 	private String uri;
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.MERGE})
 	@JoinTable(name = "permission_employee_role", joinColumns = @JoinColumn(name = "permission_id"), inverseJoinColumns = @JoinColumn(name = "employee_role_id"))
 	private Set<EmployeeRole> employeeRoles;
 
@@ -33,6 +34,14 @@ public class Permission {
 	public Permission(String uri, EmployeeRole... employeeRoles) {
 		this.uri = uri;
 		this.employeeRoles = new HashSet<>(Arrays.asList(employeeRoles));
+	}
+
+	public void addEmployeeRole(EmployeeRole employeeRole) {
+		employeeRoles.add(employeeRole);
+	}
+
+	public void removeEmployeeRole(EmployeeRole employeeRole) {
+		employeeRoles.remove(employeeRole);
 	}
 
 	public String getUri() {

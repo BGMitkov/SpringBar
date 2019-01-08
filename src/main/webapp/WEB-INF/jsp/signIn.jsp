@@ -5,8 +5,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Login</title>
-<!-- <link rel="stylesheet" type="text/css" href="/SpringBar/resources/css/bootstrap.css" /> -->
-<!-- <link rel="stylesheet" type="text/css" href="/SpringBar/resources/css/bar.css" /> -->
 <spring:url value="/resources/css/bootstrap.css" var="bootstrapCss" />
 <spring:url value="/resources/css/bar.css" var="barCss" />
 <link href="${bootstrapCss}" rel="stylesheet" />
@@ -30,14 +28,14 @@
 	</div>
 
 	<form:form id="login_form" method="post"
-		action="/SpringBar/loginSubmit">
+		action="/SpringBar/signInSubmit">
 		<div class="form-group">
-			<label for="userName">Username:</label> <input type="text"
-				class="form-control" name="name" id="name" value="">
+			<label for="name">Username:</label> <input type="text"
+				class="form-control" name="name" id="name">
 		</div>
 		<div class="form-group">
-			<label for="pwd">Password:</label> <input type="password"
-				class="form-control" name="password" id="password" value="">
+			<label for="password">Password:</label> <input type="password"
+				class="form-control" name="password" id="password">
 		</div>
 
 		<button type="reset" class="btn btn-default" id="reset_login">Reset</button>

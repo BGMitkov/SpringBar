@@ -7,6 +7,7 @@ import static org.springframework.test.web.ModelAndViewAssert.assertModelAttribu
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -67,7 +68,8 @@ public class UserControllerTest extends AbstractTest {
 		when(securityService.register(any(User.class))).thenReturn("registeredUser");
 		when(securityService.checkPermission(anyString())).thenReturn(true);
 
-		MvcResult mvcResult = this.mvc.perform(buildPostRequest(userDTO)).andExpect(status().isOk()).andReturn();
+		MvcResult mvcResult = this.mvc.perform(buildPostRequest(userDTO)).andExpect(model().errorCount(0))
+				.andExpect(status().isOk()).andReturn();
 
 		ModelAndView mav = mvcResult.getModelAndView();
 
@@ -95,8 +97,10 @@ public class UserControllerTest extends AbstractTest {
 	public void whenLoginFormIsSubmitted_thenIndexViewReturned_noException() throws Exception {
 		when(securityService.authenticate(any(UserDTO.class))).thenReturn(true);
 
-		MvcResult mvcResult = this.mvc.perform(post("/loginSubmit").contentType("application/x-www-form-urlencoded")
-				.param("name", "regtest").param("password", "regtest")).andExpect(status().isOk()).andReturn();
+		MvcResult mvcResult = this.mvc
+				.perform(post("/loginSubmit").contentType("application/x-www-form-urlencoded").param("name", "regtest")
+						.param("password", "regtest"))
+				.andExpect(model().errorCount(0)).andExpect(status().isOk()).andReturn();
 
 		ModelAndView mav = mvcResult.getModelAndView();
 
@@ -106,13 +110,9 @@ public class UserControllerTest extends AbstractTest {
 	@Test
 	public void whenLoginFormIsSubmitted_thenInvalidCredentailsViewReturned_noException() throws Exception {
 		when(securityService.authenticate(any(UserDTO.class))).thenReturn(false);
-
-		MvcResult mvcResult = this.mvc.perform(post("/loginSubmit").contentType("application/x-www-form-urlencoded")
-				.param("name", "regtest").param("password", "regtest")).andExpect(status().isOk()).andReturn();
-
-		ModelAndView mav = mvcResult.getModelAndView();
-
-		assertViewName(mav, "invalidCredentials");
+		this.mvc.perform(post("/loginSubmit").contentType("application/x-www-form-urlencoded").param("name", "regtest")
+				.param("password", "regtest")).andExpect(model().errorCount(0)).andExpect(status().isOk())
+				.andExpect(view().name("invalidCredentials"));
 	}
 
 	@Test
@@ -126,7 +126,8 @@ public class UserControllerTest extends AbstractTest {
 		UserDTO testUser = new UserDTO("", userDTO.getPassword(), userDTO.getEmail(), userDTO.getEmployeeRole(),
 				userDTO.getBirthDate());
 
-		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(model().errorCount(1)).andExpect(status().isOk())
+				.andReturn();
 	}
 
 	@Test
@@ -134,7 +135,7 @@ public class UserControllerTest extends AbstractTest {
 		UserDTO testUser = new UserDTO(userDTO.getName(), "", userDTO.getEmail(), userDTO.getEmployeeRole(),
 				userDTO.getBirthDate());
 
-		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(model().errorCount(4)).andExpect(status().isOk());
 	}
 
 	@Test
@@ -142,7 +143,8 @@ public class UserControllerTest extends AbstractTest {
 		UserDTO testUser = new UserDTO(userDTO.getName(), "TEST1@", userDTO.getEmail(), userDTO.getEmployeeRole(),
 				userDTO.getBirthDate());
 
-		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(model().errorCount(1)).andExpect(status().isOk())
+				.andReturn();
 	}
 
 	@Test
@@ -150,7 +152,8 @@ public class UserControllerTest extends AbstractTest {
 		UserDTO testUser = new UserDTO(userDTO.getName(), "test1@", userDTO.getEmail(), userDTO.getEmployeeRole(),
 				userDTO.getBirthDate());
 
-		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(model().errorCount(1)).andExpect(status().isOk())
+				.andReturn();
 	}
 
 	@Test
@@ -158,7 +161,8 @@ public class UserControllerTest extends AbstractTest {
 		UserDTO testUser = new UserDTO(userDTO.getName(), "tesT@", userDTO.getEmail(), userDTO.getEmployeeRole(),
 				userDTO.getBirthDate());
 
-		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(model().errorCount(1)).andExpect(status().isOk())
+				.andReturn();
 	}
 
 	@Test
@@ -166,7 +170,7 @@ public class UserControllerTest extends AbstractTest {
 		UserDTO testUser = new UserDTO(userDTO.getName(), "testT1", userDTO.getEmail(), userDTO.getEmployeeRole(),
 				userDTO.getBirthDate());
 
-		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(model().errorCount(1)).andExpect(status().isOk());
 	}
 
 	@Test
@@ -174,7 +178,8 @@ public class UserControllerTest extends AbstractTest {
 		UserDTO testUser = new UserDTO(userDTO.getName(), userDTO.getPassword(), userDTO.getEmail(), "invalidRole",
 				userDTO.getBirthDate());
 
-		this.mvc.perform(buildPostRequest(testUser)).andExpect(status().isBadRequest()).andReturn();
+		this.mvc.perform(buildPostRequest(testUser)).andExpect(model().errorCount(1)).andExpect(status().isOk())
+				.andReturn();
 	}
 
 	private MockHttpServletRequestBuilder buildPostRequest(UserDTO userDTO) {

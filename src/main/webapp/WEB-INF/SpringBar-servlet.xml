@@ -18,27 +18,28 @@
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 
-	<mvc:resources mapping="/resources/**"
-		location="/resources/" />
-	<mvc:annotation-driven
-		conversion-service="conversionService" />
-		
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<mvc:exclude-mapping path="/resources/**" />
-			<bean id="UserServiceInterceptor"
-				class="bar.interceptor.UserServiceInterceptor" />
-		</mvc:interceptor>
+<!-- 	<mvc:resources mapping="/resources/**" -->
+<!-- 		location="/resources/" > -->
+<!-- 		<mvc:cache-control max-age="365"/>	 -->
+<!-- 		<mvc:resource-chain resource-cache="false"> -->
+<!-- 			<mvc:resolvers> -->
+<!-- 				<mvc:version-resolver> -->
+<!-- 					<mvc:content-version-strategy patterns="/**"/> -->
+<!-- 				</mvc:version-resolver>	 -->
+<!-- 			</mvc:resolvers>	 -->
+<!-- 		</mvc:resource-chain> -->
+<!-- 	</mvc:resources> -->
+	
+	
+	<mvc:annotation-driven />
 
-	</mvc:interceptors>
+<!-- 	<mvc:interceptors> -->
+<!-- 		<mvc:interceptor> -->
+<!-- 			<mvc:mapping path="/**" /> -->
+<!-- 			<mvc:exclude-mapping path="/resources/**" /> -->
+<!-- 			<bean id="UserServiceInterceptor" -->
+<!-- 				class="bar.interceptor.UserServiceInterceptor" /> -->
+<!-- 		</mvc:interceptor> -->
 
-	<bean id="conversionService"
-		class="org.springframework.context.support.ConversionServiceFactoryBean">
-		<property name="converters">
-			<set>
-				<bean class="bar.converter.StringToEmployeeRoleConverter"></bean>
-			</set>
-		</property>
-	</bean>
+<!-- 	</mvc:interceptors> -->
 </beans>

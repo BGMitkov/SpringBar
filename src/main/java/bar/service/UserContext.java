@@ -40,8 +40,9 @@ public class UserContext {
 	}
 
 	public String getName() {
-		logger.info("getName(): {}", user.getName());
-		return user.getName();
+		String name = user != null ? user.getName() : "No user signed";
+		logger.info("getName(): {}", name);
+		return name;
 	}
 
 	public User getUser() {

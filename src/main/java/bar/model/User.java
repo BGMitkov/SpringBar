@@ -3,7 +3,6 @@ package bar.model;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,19 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import bar.annotation.HasDigit;
-import bar.annotation.HasLowerCaseCharacter;
-import bar.annotation.HasSpecialSymbol;
-import bar.annotation.HasUpperCaseChar;
-import bar.annotation.UserNameConstraint;
 
 @Entity
 @Table(name = "user")
@@ -41,7 +32,7 @@ public class User {
 	private String password;
 	@Column(unique = true)
 	private String email;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "employee_role_id")
 	private EmployeeRole employeeRole;
 	@DateTimeFormat(iso = ISO.DATE)

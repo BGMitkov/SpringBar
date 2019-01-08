@@ -1,10 +1,20 @@
 package bar.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class ItemDTO {
+	@NotBlank
 	private String name;
+	@NotNull
 	private int price;
+	@NotNull
 	private String type;
+	@NotBlank
 	private String description;
+
+	public ItemDTO() {
+	}
 
 	public String getName() {
 		return name;

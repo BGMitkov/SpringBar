@@ -1,8 +1,8 @@
 package bar.utility;
 
-import java.security.Permissions;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import bar.dao.EmployeeRoleDAO;
@@ -37,6 +37,8 @@ public class DatabaseUtilities {
 	private EmployeeRoleDAO employeeRoleDAO;
 	@Autowired
 	private PermissionDAO permissionDAO;
+	@Autowired
+	private PasswordEncoder bCryptPasswordEncoder;
 
 	public void storeTestData() {
 		deleteData();
@@ -59,6 +61,9 @@ public class DatabaseUtilities {
 		permissionDAO.save(new Permission("/SpringBar/acceptOrder", manager, bartender));
 		permissionDAO.save(new Permission("/SpringBar/printBill", manager, server));
 		permissionDAO.save(new Permission("/SpringBar/view/addItemForm", manager));
+		permissionDAO.save(new Permission("/SpringBar/addItem", manager));
+//		permissionDAO.save(new Permission("/SpringBar/", manager, bartender, server));
+		permissionDAO.save(new Permission("/SpringBar/signOut", manager, bartender, server));
 	}
 
 	private void addTestEmployeeRoles() {
@@ -69,7 +74,8 @@ public class DatabaseUtilities {
 
 	private void addTestUsers() {
 		EmployeeRole employeeRole = employeeRoleDAO.findByName("manager");
-		User user = new User("test_user", "testUser1@", "test.user@somemail.com", employeeRole,
+		String encodedPassword = bCryptPasswordEncoder.encode("testUser1@");
+		User user = new User("test_user", encodedPassword, "test.user@somemail.com", employeeRole,
 				LocalDate.of(2018, 1, 1));
 
 		userDAO.save(user);
@@ -81,10 +87,11 @@ public class DatabaseUtilities {
 		}
 	}
 
-	public void deleteData() {
+	private void deleteData() {
 		userDAO.deleteAll();
 		itemTypeDAO.deleteAll();
 		itemDAO.deleteAll();
 		employeeRoleDAO.deleteAll();
+		permissionDAO.deleteAll();
 	}
 }

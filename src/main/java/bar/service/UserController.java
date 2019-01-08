@@ -48,7 +48,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/registerEmployeeSubmit", method = RequestMethod.POST)
-	public String registerUser(@ModelAttribute("user") @Valid UserDTO userDTO, ModelMap model, BindingResult result) {
+	public String registerUser(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult result, ModelMap model) {
 		if (result.hasErrors()) {
 			return "registerEmployee";
 		}
@@ -59,23 +59,32 @@ public class UserController {
 		return view;
 	}
 
-	@GetMapping("/view/login")
+	@GetMapping("/view/signIn")
 	public ModelAndView loginForm() {
-		logger.info("Request for login form");
-		return new ModelAndView("login", "command", new UserDTO());
+		logger.info("Request for sign in form");
+		return new ModelAndView("signIn", "command", new UserDTO());
 	}
 
-	@PostMapping("/loginSubmit")
+	@PostMapping("/signInSubmit")
 	public String login(@ModelAttribute("user") UserDTO user) {
-		logger.info("Request for login submit");
-		return securityService.authenticate(user) ? "index" : "invalidCredentials";
+		logger.info("Request for sign in submit");
+		return securityService.authenticate(user) ? "index" : "signIn";
 	}
 
-	@GetMapping("/signout")
+	@GetMapping("/signOut")
 	public String signout() {
-		logger.info("Request for signout by: {}", securityService.getUserName());
+		logger.info("Request for signOut by: {}", securityService.getUserName());
 		securityService.signout();
-		return "redirect:/login";
+		return "redirect:/view/signIn";
+	}
+
+	@GetMapping("/")
+	public String index(Model model) {
+		logger.info("Request for index page");
+		if (!securityService.checkPermission("/SpringBar/")) {
+			return "redirect:/view/signIn";
+		}
+		return "index";
 	}
 
 	private User convertToUser(UserDTO userDTO) {
