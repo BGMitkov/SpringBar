@@ -14,6 +14,8 @@ import bar.model.Permission;
 import bar.model.User;
 
 /**
+ * Class implementing the security functionality for the application.
+ * 
  * @author bgmitkov
  *
  */
@@ -37,11 +39,10 @@ public class SecurityService {
 
 	/**
 	 * Given a uri returns true or false on whether the currently signed in user has
-	 * permission to access the service mapped by the given uri. If there is not
-	 * permission object for a given uri then access is not restricted
+	 * permission to access the service mapped by the given uri.
 	 * 
 	 * @param uri mapped to a service
-	 * @return whether access is permitted
+	 * @return true if access is permitted, false otherwise
 	 */
 	public boolean checkPermission(String uri) {
 		logger.info("Permission requested by: {} for {}", userContext.getName(), uri);
@@ -58,11 +59,28 @@ public class SecurityService {
 		return userContext.isAuthenticated() && permission.hasAccess(userContext.getEmployeeRole());
 	}
 
-	public void setPermissions(String uri, EmployeeRole... employeeRoles) {
-//		Set<EmployeeRole> setPermissions = new HashSet<>(Arrays.asList(employeeRoles));
-		Permission permission = new Permission(uri, employeeRoles);
-		permissionDAO.save(permission);
+	/**
+	 * Permits the given Employee Roles to access the service mapped to the given
+	 * URI.
+	 * 
+	 * @param uri
+	 * @param employeeRoles
+	 * @return The permission associated to the given URI
+	 */
+	public Permission setPermissions(String uri, EmployeeRole... employeeRoles) {
+		Permission permission = permissionDAO.findByUri(uri);
+		if (permission == null) {
+			permission = new Permission(uri, employeeRoles);
+		} else {
+			for (EmployeeRole employeeRole : employeeRoles) {
+				permission.addEmployeeRole(employeeRole);
+			}
+		}
+
+		return permissionDAO.save(permission);
 	}
+
+	// TODO make a remove permissions service
 
 	public String getUserName() {
 		if (!userContext.isAuthenticated()) {
@@ -72,10 +90,21 @@ public class SecurityService {
 		return userContext.getName();
 	}
 
+	/**
+	 * Return the currently signed in user for the session.
+	 * 
+	 * @return the user or null if no user is signed in
+	 */
 	public User getUser() {
 		return userContext.getUser();
 	}
 
+	/**
+	 * Authenticates the user with the given data
+	 * 
+	 * @param userDTO containing the name and password. Not null.
+	 * @return true if authentication is successful or false otherwise.
+	 */
 	public boolean authenticate(UserDTO userDTO) {
 		logger.info("authenticate(): " + userDTO.getName());
 
@@ -91,8 +120,9 @@ public class SecurityService {
 	}
 
 	/**
-	 * @param user the object containing the submitted user data
-	 * @return the name of the view to send to user
+	 * Registers the given user. Name and email have to be unique.
+	 * @param user the object containing the submitted user data. Not null.
+	 * @return the name of the view
 	 */
 	public String register(User user) {
 		logger.info("Request for register user");

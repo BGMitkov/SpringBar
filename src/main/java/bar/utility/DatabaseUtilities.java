@@ -19,7 +19,7 @@ import bar.model.User;
 public class DatabaseUtilities {
 	private static final ItemType[] ITEM_TYPES = { new ItemType("type") };
 	private static final EmployeeRole[] EMPLOYEE_ROLES = { new EmployeeRole("manager"), new EmployeeRole("server"),
-			new EmployeeRole("bartender") };
+			new EmployeeRole("bartender"), new EmployeeRole("testRoleWithPermission"), new EmployeeRole("testRoleWithOutPermission") };
 //	private static final User[] USERS = {
 //			new User("test_user", "testUser1@", "test.user@somemail.com", null, LocalDate.of(2018, 1, 1)),
 //			new User("test2", "test", "test2.user@somemail.com", Role.SERVER, "2018-01-01"),
@@ -52,7 +52,7 @@ public class DatabaseUtilities {
 		EmployeeRole manager = employeeRoleDAO.findByName("manager");
 		EmployeeRole server = employeeRoleDAO.findByName("server");
 		EmployeeRole bartender = employeeRoleDAO.findByName("bartenter");
-
+		EmployeeRole testRoleWithPermission = employeeRoleDAO.findByName("testRoleWithPermission");
 		permissionDAO.save(new Permission("/SpringBar/view/registerEmployee", manager));
 		permissionDAO.save(new Permission("/SpringBar/registerEmployeeSubmit", manager));
 		permissionDAO.save(new Permission("/SpringBar/order", manager, server));
@@ -64,6 +64,7 @@ public class DatabaseUtilities {
 		permissionDAO.save(new Permission("/SpringBar/addItem", manager));
 //		permissionDAO.save(new Permission("/SpringBar/", manager, bartender, server));
 		permissionDAO.save(new Permission("/SpringBar/signOut", manager, bartender, server));
+		permissionDAO.save(new Permission("/SpringBar/test", testRoleWithPermission));
 	}
 
 	private void addTestEmployeeRoles() {
