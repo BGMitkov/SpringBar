@@ -24,8 +24,6 @@ public class ItemController {
 	private ItemDAO itemDAO;
 	@Autowired
 	private ItemTypeDAO itemTypeDAO;
-	@Autowired
-	private SecurityService securityService;
 
 	@RequestMapping(value = "/view/addItemForm", method = RequestMethod.GET)
 	public ModelAndView item() {

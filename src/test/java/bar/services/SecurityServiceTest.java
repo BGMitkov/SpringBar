@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -51,7 +53,9 @@ public class SecurityServiceTest extends AbstractTest {
 	private User user;
 	@MockBean
 	private UserDAO userDAO;
-	
+	@MockBean
+	PasswordEncoder passwordEncoder;
+
 	@Before
 	@Override
 	public void setup() {
@@ -138,6 +142,8 @@ public class SecurityServiceTest extends AbstractTest {
 		UserDTO userDTO = new UserDTO();
 		userDTO.setName("test_user");
 		userDTO.setPassword("testUser1@");
+		when(userDAO.findByName("test_user")).thenReturn(user);
+		when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 		assertTrue(securityService.authenticate(userDTO));
 	}
 
@@ -156,11 +162,50 @@ public class SecurityServiceTest extends AbstractTest {
 		userDTO.setPassword("noExistingPassward1@");
 		assertFalse(securityService.authenticate(userDTO));
 	}
-	
+
 	@Test
 	public void registerTest_successful() {
 		when(userDAO.findByName(anyString())).thenReturn(null);
 		when(userDAO.findByEmail(anyString())).thenReturn(null);
-		
+		when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+		when(userDAO.save(any(User.class))).thenReturn(any(User.class));
+		assertEquals("registeredUser", securityService.register(new User()));
+	}
+
+	@Test
+	public void registerTest_nameConflict() {
+		when(userDAO.findByName(anyString())).thenReturn(user);
+		when(userDAO.findByEmail(anyString())).thenReturn(null);
+		when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+		when(userDAO.save(any(User.class))).thenReturn(user);
+		assertEquals("nameConflict", securityService.register(user));
+	}
+
+	@Test
+	public void registerTest_emailConflict() {
+		when(userDAO.findByName(anyString())).thenReturn(null);
+		when(userDAO.findByEmail(anyString())).thenReturn(user);
+		when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+		when(userDAO.save(any(User.class))).thenReturn(user);
+		assertEquals("emailConflict", securityService.register(user));
+	}
+
+	@Test
+	public void getRoleTest_whenAuthenticated() {
+		when(userContext.isAuthenticated()).thenReturn(true);
+		when(userContext.getEmployeeRole()).thenReturn(testRoleWithPermission);
+		assertEquals("testRoleWithPermission", securityService.getRole());
+	}
+
+	@Test
+	public void getRoleTest_whenNotAuthenticated() {
+		when(userContext.isAuthenticated()).thenReturn(false);
+		assertEquals("", securityService.getRole());
+	}
+
+	@Test
+	public void signOutTest() {
+		when(userContext.isAuthenticated()).thenReturn(true);
+		assertTrue(securityService.signout());
 	}
 }

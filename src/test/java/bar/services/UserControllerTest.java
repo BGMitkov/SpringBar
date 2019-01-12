@@ -13,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
+import javax.transaction.Transactional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,12 +32,14 @@ import org.springframework.web.servlet.ModelAndView;
 import bar.SpringBarApplication;
 import bar.dao.EmployeeRoleDAO;
 import bar.dto.UserDTO;
+import bar.interceptor.UserServiceInterceptor;
 import bar.model.User;
 import bar.service.SecurityService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
 @WebAppConfiguration
+@Transactional
 public class UserControllerTest extends AbstractTest {
 
 //	MockHttpSession session;
@@ -44,16 +48,21 @@ public class UserControllerTest extends AbstractTest {
 	private SecurityService securityService;
 	@MockBean
 	private UserDTO userDTO;
-	@Autowired
-	private EmployeeRoleDAO employeeRoleDAO;
+	@MockBean
+	private UserServiceInterceptor userServiceInterceptor;
 
-	@Override
 	@Before
+	@Override
 	public void setup() {
 		super.setup();
 //		this.session = new MockHttpSession();
 		this.userDTO = new UserDTO("registrationTest", "registrationTEST1@", "regtest@test.test", "server",
 				LocalDate.of(2018, 1, 1));
+		try {
+			when(userServiceInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 //		request = post("/registerEmployeeSubmit").contentType("application/x-www-form-urlencoded")
 //				.param("name", "registrationTest").param("password", "registrationTEST1@")
 //				.param("email", "regtest@test.test").param("role", "SERVER").param("birthDate", "2017-01-01");
@@ -66,7 +75,6 @@ public class UserControllerTest extends AbstractTest {
 	@Test
 	public void whenRegisterIsSuccessful_thenNoExceptions() throws Exception {
 		when(securityService.register(any(User.class))).thenReturn("registeredUser");
-		when(securityService.checkPermission(anyString())).thenReturn(true);
 
 		MvcResult mvcResult = this.mvc.perform(buildPostRequest(userDTO)).andExpect(model().errorCount(0))
 				.andExpect(status().isOk()).andReturn();
@@ -86,11 +94,7 @@ public class UserControllerTest extends AbstractTest {
 
 	@Test
 	public void whenLoginFormIsRequested_thenNoException() throws Exception {
-		MvcResult mvcResult = this.mvc.perform(get("/view/login")).andExpect(status().isOk()).andReturn();
-
-		ModelAndView modelAndView = mvcResult.getModelAndView();
-
-		assertViewName(modelAndView, "login");
+		this.mvc.perform(get("/view/signIn")).andExpect(status().isOk()).andExpect(view().name("signIn"));
 	}
 
 	@Test
@@ -98,7 +102,7 @@ public class UserControllerTest extends AbstractTest {
 		when(securityService.authenticate(any(UserDTO.class))).thenReturn(true);
 
 		MvcResult mvcResult = this.mvc
-				.perform(post("/loginSubmit").contentType("application/x-www-form-urlencoded").param("name", "regtest")
+				.perform(post("/signInSubmit").contentType("application/x-www-form-urlencoded").param("name", "regtest")
 						.param("password", "regtest"))
 				.andExpect(model().errorCount(0)).andExpect(status().isOk()).andReturn();
 
@@ -110,15 +114,15 @@ public class UserControllerTest extends AbstractTest {
 	@Test
 	public void whenLoginFormIsSubmitted_thenInvalidCredentailsViewReturned_noException() throws Exception {
 		when(securityService.authenticate(any(UserDTO.class))).thenReturn(false);
-		this.mvc.perform(post("/loginSubmit").contentType("application/x-www-form-urlencoded").param("name", "regtest")
+		this.mvc.perform(post("/signInSubmit").contentType("application/x-www-form-urlencoded").param("name", "regtest")
 				.param("password", "regtest")).andExpect(model().errorCount(0)).andExpect(status().isOk())
-				.andExpect(view().name("invalidCredentials"));
+				.andExpect(view().name("signIn"));
 	}
 
 	@Test
 	public void whenLogoutRequest_thenNoException() throws Exception {
-		this.mvc.perform(get("/signout")).andExpect(status().is3xxRedirection())
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+		this.mvc.perform(get("/signOut")).andExpect(status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/view/signIn"));
 	}
 
 	@Test

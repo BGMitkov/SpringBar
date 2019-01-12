@@ -1,6 +1,11 @@
 package bar.utility;
 
 import java.time.LocalDate;
+
+import javax.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,10 +21,14 @@ import bar.model.Permission;
 import bar.model.User;
 
 @Component
+@Transactional
 public class DatabaseUtilities {
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseUtilities.class);
+
 	private static final ItemType[] ITEM_TYPES = { new ItemType("type") };
 	private static final EmployeeRole[] EMPLOYEE_ROLES = { new EmployeeRole("manager"), new EmployeeRole("server"),
-			new EmployeeRole("bartender"), new EmployeeRole("testRoleWithPermission"), new EmployeeRole("testRoleWithOutPermission") };
+			new EmployeeRole("bartender"), new EmployeeRole("testRoleWithPermission"),
+			new EmployeeRole("testRoleWithOutPermission") };
 //	private static final User[] USERS = {
 //			new User("test_user", "testUser1@", "test.user@somemail.com", null, LocalDate.of(2018, 1, 1)),
 //			new User("test2", "test", "test2.user@somemail.com", Role.SERVER, "2018-01-01"),
@@ -41,6 +50,7 @@ public class DatabaseUtilities {
 	private PasswordEncoder bCryptPasswordEncoder;
 
 	public void storeTestData() {
+		logger.info("Storing test data.");
 		deleteData();
 		addTestEmployeeRoles();
 		addTestUsers();
@@ -68,12 +78,14 @@ public class DatabaseUtilities {
 	}
 
 	private void addTestEmployeeRoles() {
+		logger.info("Adding test employee roles");
 		for (EmployeeRole employeeRole : EMPLOYEE_ROLES) {
 			employeeRoleDAO.save(employeeRole);
 		}
 	}
 
 	private void addTestUsers() {
+		logger.info("Adding test users");
 		EmployeeRole employeeRole = employeeRoleDAO.findByName("manager");
 		String encodedPassword = bCryptPasswordEncoder.encode("testUser1@");
 		User user = new User("test_user", encodedPassword, "test.user@somemail.com", employeeRole,
@@ -83,16 +95,18 @@ public class DatabaseUtilities {
 	}
 
 	private void addTestItemTypes() {
+		logger.info("Adding test item types");
 		for (ItemType itemType : ITEM_TYPES) {
 			itemTypeDAO.save(itemType);
 		}
 	}
 
 	private void deleteData() {
+		logger.info("Deleting all data");
+		employeeRoleDAO.deleteAll();
 		userDAO.deleteAll();
 		itemTypeDAO.deleteAll();
 		itemDAO.deleteAll();
-		employeeRoleDAO.deleteAll();
 		permissionDAO.deleteAll();
 	}
 }

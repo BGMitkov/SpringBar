@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
@@ -47,19 +48,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		configurer.enable();
 	}
 
-//	@Autowired
-//	private UserServiceInterceptor userServiceInterceptor;
-
-	@Bean
-	public UserServiceInterceptor getUserServiceInterceptor() {
-		return new UserServiceInterceptor();
-	}
+	@Autowired
+	private UserServiceInterceptor userServiceInterceptor;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		logger.info("Add interceptor UserServiceInterceptor");
-		registry.addInterceptor(getUserServiceInterceptor()).addPathPatterns("/**")
-				.excludePathPatterns("/resources/**");
+		registry.addInterceptor(userServiceInterceptor).addPathPatterns("/**").excludePathPatterns("/resources/**");
 	}
 
 	@Override

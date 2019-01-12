@@ -121,6 +121,7 @@ public class SecurityService {
 
 	/**
 	 * Registers the given user. Name and email have to be unique.
+	 * 
 	 * @param user the object containing the submitted user data. Not null.
 	 * @return the name of the view
 	 */
@@ -150,7 +151,8 @@ public class SecurityService {
 		return "";
 	}
 
-	public void signout() {
+	public boolean signout() {
 		userContext.setUser(null);
+		return userContext.isAuthenticated();
 	}
 }
