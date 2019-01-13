@@ -10,12 +10,14 @@ import javax.validation.constraints.Past;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import bar.annotation.ExistsInDataBase;
+import bar.annotation.ExistsInDatabase;
+import bar.annotation.Extended;
 import bar.annotation.HasDigit;
 import bar.annotation.HasLowerCaseCharacter;
 import bar.annotation.HasSpecialSymbol;
 import bar.annotation.HasUpperCaseChar;
 import bar.annotation.UserNameConstraint;
+import bar.dao.EmployeeRoleDAO;
 
 public class UserDTO {
 	@UserNameConstraint(message = "*The username contains invalid characters")
@@ -29,7 +31,7 @@ public class UserDTO {
 	@NotEmpty(message = "*Please provide an email")
 	private String email;
 	@NotEmpty(message = "*Please select an employee role")
-	@ExistsInDataBase
+	@ExistsInDatabase(repository = EmployeeRoleDAO.class, groups = Extended.class)
 	private String employeeRole;
 	@DateTimeFormat(iso = ISO.DATE)
 	@NotNull(message = "*Please select your birthdate")

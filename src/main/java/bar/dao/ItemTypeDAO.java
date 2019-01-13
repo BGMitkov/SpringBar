@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 import bar.model.ItemType;
 
 @Repository
-public interface ItemTypeDAO extends CrudRepository<ItemType, Long> {
-	ItemType findByName(String name);
+public interface ItemTypeDAO extends NameRepository<ItemType/*, Long*/>, CrudRepository<ItemType, Long> {
 }

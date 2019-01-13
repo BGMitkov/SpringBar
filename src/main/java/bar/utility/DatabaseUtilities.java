@@ -75,6 +75,7 @@ public class DatabaseUtilities {
 //		permissionDAO.save(new Permission("/SpringBar/", manager, bartender, server));
 		permissionDAO.save(new Permission("/SpringBar/signOut", manager, bartender, server));
 		permissionDAO.save(new Permission("/SpringBar/test", testRoleWithPermission));
+		permissionDAO.save(new Permission("/SpringBar/items", manager, server));
 	}
 
 	private void addTestEmployeeRoles() {

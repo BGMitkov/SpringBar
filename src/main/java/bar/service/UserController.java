@@ -5,20 +5,19 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import bar.annotation.ValidationSequence;
 import bar.dao.EmployeeRoleDAO;
 import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
@@ -32,13 +31,6 @@ public class UserController {
 	private SecurityService securityService;
 	@Autowired
 	private EmployeeRoleDAO employeeRoleDAO;
-//	@Autowired
-//	private ConversionService ConversionService;
-//
-//	@InitBinder
-//	protected void initBinder(ServletRequestDataBinder binder) {
-//		binder.setConversionService(ConversionService);
-//	}
 
 	@GetMapping("/view/registerEmployee")
 	public String registerEmployeeForm(Model model) {
@@ -48,7 +40,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/registerEmployeeSubmit", method = RequestMethod.POST)
-	public String registerUser(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult result, ModelMap model) {
+	public String registerUser(@Validated(ValidationSequence.class) @ModelAttribute("user") UserDTO userDTO,
+			BindingResult result, ModelMap model) {
 		if (result.hasErrors()) {
 			return "registerEmployee";
 		}

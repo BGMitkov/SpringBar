@@ -46,7 +46,6 @@ public class UserControllerTest extends AbstractTest {
 
 	@MockBean
 	private SecurityService securityService;
-	@MockBean
 	private UserDTO userDTO;
 	@MockBean
 	private UserServiceInterceptor userServiceInterceptor;

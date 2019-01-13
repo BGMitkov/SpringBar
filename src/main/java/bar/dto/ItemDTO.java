@@ -1,15 +1,20 @@
 package bar.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+import bar.annotation.ExistsInDatabase;
+import bar.annotation.Extended;
+import bar.dao.ItemTypeDAO;
 
 public class ItemDTO {
 	@NotBlank
 	private String name;
-	@NotNull
+	@Positive
 	private int price;
-	@NotNull
-	private String type;
+	@NotBlank
+	@ExistsInDatabase(repository = ItemTypeDAO.class, groups = { Extended.class })
+	private String itemType;
 	@NotBlank
 	private String description;
 
@@ -32,12 +37,12 @@ public class ItemDTO {
 		this.price = price;
 	}
 
-	public String getType() {
-		return type;
+	public String getItemType() {
+		return itemType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
 	}
 
 	public String getDescription() {

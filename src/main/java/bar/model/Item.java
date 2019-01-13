@@ -9,11 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 @Entity
-@Table(name = "ITEM")
+@Table(name = "item", uniqueConstraints = @UniqueConstraint(columnNames = { "item_id", "name" }))
 public class Item {
 
 	@Id
@@ -24,14 +27,11 @@ public class Item {
 	private String name;
 	@NotNull
 	private int price;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "item_type_id")
-	@NotNull
 	private ItemType itemType;
 	@NotBlank
 	private String description;
-//	@ManyToMany(mappedBy = "items")
-//	private List<Order> orders;
 
 	public Item() {
 	}

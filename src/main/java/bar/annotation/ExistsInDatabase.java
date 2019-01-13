@@ -9,7 +9,8 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import bar.validator.EmployeeRoleValidator;
+import bar.dao.NameRepository;
+import bar.validator.ExistsByNameValidator;
 
 /**
  * Annotation for validating EmployeeRole.
@@ -18,14 +19,15 @@ import bar.validator.EmployeeRoleValidator;
  *
  */
 @Documented
-@Constraint(validatedBy = EmployeeRoleValidator.class)
+@Constraint(validatedBy = ExistsByNameValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExistsInDataBase {
+public @interface ExistsInDatabase {
 	String message() default "Invalid";
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
 
+	Class<? extends NameRepository<?/*, ?*/>> repository();
 }

@@ -21,7 +21,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import bar.SpringBarApplication;
+import bar.constant.URI;
+import bar.dao.ItemDAO;
 import bar.dao.ItemTypeDAO;
+import bar.dto.ItemDTO;
 import bar.interceptor.UserServiceInterceptor;
 import bar.model.Item;
 import bar.model.ItemType;
@@ -36,17 +39,25 @@ public class ItemControllerTest extends AbstractTest {
 	@MockBean
 	private SecurityService securityService;
 	private Item item;
+	private ItemDTO itemDTO;
 	@MockBean
 	private UserServiceInterceptor userServiceInterceptor;
 	@Autowired
 	private ItemTypeDAO itemTypeDAO;
+	@MockBean
+	private ItemDAO itemDAO;
 
 	@Override
 	@Before
 	public void setup() {
 		super.setup();
+		itemDTO = new ItemDTO();
+		itemDTO.setName("item");
+		itemDTO.setPrice(1);
+		itemDTO.setDescription("An item");
+		itemDTO.setItemType("type");
 		ItemType itemType = itemTypeDAO.findByName("type");
-		this.item = new Item("item", 100, itemType, "An item");
+		this.item = new Item("item", 1, itemType, "An item");
 		try {
 			when(userServiceInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 		} catch (Exception e) {
@@ -56,17 +67,69 @@ public class ItemControllerTest extends AbstractTest {
 
 	@Test
 	public void addItemFormTest() throws Exception {
-		this.mvc.perform(get("/addItemForm")).andExpect(status().isOk()).andExpect(view().name("addItem"));
+		this.mvc.perform(get(URI.ADD_ITEM_FORM)).andExpect(status().isOk()).andExpect(view().name("addItem"));
 	}
 
 	@Test
 	public void addItemTest_isSuccessful_thenNoException() throws Exception {
-		this.mvc.perform(buildPostRequest(item)).andExpect(status().isOk()).andExpect(view().name("addedItem"))
-				.andExpect(model().attributeExists("item"));
+		when(itemDAO.save(any(Item.class))).thenReturn(item);
+		this.mvc.perform(buildPostRequest(itemDTO)).andExpect(status().isOk()).andExpect(model().hasNoErrors())
+				.andExpect(view().name("addedItem")).andExpect(model().attributeExists("item"));
 	}
 
-	private MockHttpServletRequestBuilder buildPostRequest(Item item) {
-		return post("/addItem").param("name", item.getName()).param("price", "100")
-				.param("itemType", item.getItemType().toString()).param("description", item.getDescription());
+	@Test
+	public void addItemTest_withNullValues_Failed_thenNoException() throws Exception {
+		ItemDTO itemDTO = new ItemDTO();
+		itemDTO.setName(null);
+		itemDTO.setPrice(-1);
+		itemDTO.setDescription(null);
+		itemDTO.setItemType(null);
+		when(itemDAO.save(any(Item.class))).thenReturn(item);
+		this.mvc.perform(buildPostRequest(itemDTO)).andExpect(status().isOk())
+				.andExpect(model().attributeHasErrors("itemDTO"))
+				.andExpect(model().attributeHasFieldErrors("itemDTO", "name", "price", "description", "itemType"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "name", "NotBlank"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "price", "Positive"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "itemType", "NotBlank"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "description", "NotBlank"))
+				.andExpect(view().name("addItem"));
+	}
+
+	@Test
+	public void addItemTest_withBlankValues_Failed_thenNoException() throws Exception {
+		ItemDTO itemDTO = new ItemDTO();
+		itemDTO.setName("");
+		itemDTO.setPrice(0);
+		itemDTO.setDescription("");
+		itemDTO.setItemType("");
+		when(itemDAO.save(any(Item.class))).thenReturn(item);
+		this.mvc.perform(buildPostRequest(itemDTO)).andExpect(status().isOk())
+				.andExpect(model().attributeHasErrors("itemDTO"))
+				.andExpect(model().attributeHasFieldErrors("itemDTO", "name", "price", "description", "itemType"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "name", "NotBlank"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "price", "Positive"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "itemType", "NotBlank"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "description", "NotBlank"))
+				.andExpect(view().name("addItem"));
+	}
+
+	@Test
+	public void addItemTest_withInvalidItemType() throws Exception {
+		ItemDTO itemDTO = new ItemDTO();
+		itemDTO.setName(this.itemDTO.getName());
+		itemDTO.setPrice(this.itemDTO.getPrice());
+		itemDTO.setDescription(this.itemDTO.getDescription());
+		itemDTO.setItemType("invalidType");
+		when(itemDAO.save(any(Item.class))).thenReturn(item);
+		this.mvc.perform(buildPostRequest(itemDTO)).andExpect(status().isOk())
+				.andExpect(model().attributeHasErrors("itemDTO"))
+				.andExpect(model().attributeHasFieldErrors("itemDTO", "itemType"))
+				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "itemType", "ExistsInDatabase"))
+				.andExpect(view().name("addItem"));
+	}
+
+	private MockHttpServletRequestBuilder buildPostRequest(ItemDTO itemDTO) {
+		return post(URI.ADD_ITEM).param("name", itemDTO.getName()).param("price", String.valueOf(itemDTO.getPrice()))
+				.param("itemType", itemDTO.getItemType()).param("description", itemDTO.getDescription());
 	}
 }
