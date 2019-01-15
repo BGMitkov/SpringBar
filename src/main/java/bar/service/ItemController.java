@@ -1,7 +1,5 @@
 package bar.service;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,8 +43,8 @@ public class ItemController {
 		return "addedItem";
 	}
 
-	@RequestMapping(value = URI.ITEMS, method = RequestMethod.GET)
-	public @ResponseBody Iterable<Item> getItems(ModelMap modelMap) {
+	@RequestMapping(value = URI.ITEMS, method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Iterable<Item> getItems() {
 		Iterable<Item> allItems = itemDAO.findAll();
 		return allItems;
 	}

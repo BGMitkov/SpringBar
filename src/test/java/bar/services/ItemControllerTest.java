@@ -1,5 +1,6 @@
 package bar.services;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -7,6 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.LinkedList;
 
 import javax.transaction.Transactional;
 
@@ -18,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import bar.SpringBarApplication;
@@ -55,8 +59,8 @@ public class ItemControllerTest extends AbstractTest {
 		itemDTO.setName("item");
 		itemDTO.setPrice(1);
 		itemDTO.setDescription("An item");
-		itemDTO.setItemType("type");
-		ItemType itemType = itemTypeDAO.findByName("type");
+		itemDTO.setItemType("Test Type");
+		ItemType itemType = itemTypeDAO.findByName("Test Type");
 		this.item = new Item("item", 1, itemType, "An item");
 		try {
 			when(userServiceInterceptor.preHandle(any(), any(), any())).thenReturn(true);
@@ -126,6 +130,17 @@ public class ItemControllerTest extends AbstractTest {
 				.andExpect(model().attributeHasFieldErrors("itemDTO", "itemType"))
 				.andExpect(model().attributeHasFieldErrorCode("itemDTO", "itemType", "ExistsInDatabase"))
 				.andExpect(view().name("addItem"));
+	}
+
+	@Test
+	public void getItemsTest_successful() throws Exception {
+		LinkedList<Item> list = new LinkedList<Item>();
+		list.add(item);
+		when(itemDAO.findAll()).thenReturn(list);
+		MvcResult result = this.mvc.perform(get(URI.ITEMS)).andExpect(status().isOk()).andReturn();
+		assertEquals(
+				"[{\"id\":null,\"name\":\"item\",\"price\":1,\"itemType\":{\"id\":1,\"name\":\"Test Type\"},\"description\":\"An item\"}]",
+				result.getResponse().getContentAsString());
 	}
 
 	private MockHttpServletRequestBuilder buildPostRequest(ItemDTO itemDTO) {

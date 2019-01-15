@@ -16,6 +16,7 @@ import bar.dao.ItemTypeDAO;
 import bar.dao.PermissionDAO;
 import bar.dao.UserDAO;
 import bar.model.EmployeeRole;
+import bar.model.Item;
 import bar.model.ItemType;
 import bar.model.Permission;
 import bar.model.User;
@@ -25,10 +26,11 @@ import bar.model.User;
 public class DatabaseUtilities {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseUtilities.class);
 
-	private static final ItemType[] ITEM_TYPES = { new ItemType("type") };
-	private static final EmployeeRole[] EMPLOYEE_ROLES = { new EmployeeRole("manager"), new EmployeeRole("server"),
-			new EmployeeRole("bartender"), new EmployeeRole("testRoleWithPermission"),
-			new EmployeeRole("testRoleWithOutPermission") };
+	private static final ItemType[] ITEM_TYPES = { new ItemType("TestItemType") };
+	private static final EmployeeRole[] EMPLOYEE_ROLES = { new EmployeeRole("testEmployeeRole"),
+			new EmployeeRole("manager"), new EmployeeRole("server"), new EmployeeRole("bartender"),
+			new EmployeeRole("testRoleWithPermission"), new EmployeeRole("testRoleWithOutPermission") };
+//	private static final Item[] ITEMS = { new Item("Test Item", 1, null, "A test item") };
 //	private static final User[] USERS = {
 //			new User("test_user", "testUser1@", "test.user@somemail.com", null, LocalDate.of(2018, 1, 1)),
 //			new User("test2", "test", "test2.user@somemail.com", Role.SERVER, "2018-01-01"),
@@ -55,6 +57,7 @@ public class DatabaseUtilities {
 		addTestEmployeeRoles();
 		addTestUsers();
 		addTestItemTypes();
+		addTestItems();
 		addTestPermissions();
 	}
 
@@ -99,13 +102,27 @@ public class DatabaseUtilities {
 		logger.info("Adding test item types");
 		for (ItemType itemType : ITEM_TYPES) {
 			itemTypeDAO.save(itemType);
+			logger.info("Added Item Type : {}", itemType.toString());
 		}
+	}
+
+	public void addTestItems() {
+		logger.info("Adding test items.");
+
+		ItemType itemType = itemTypeDAO.findByName("TestItemType");
+		Item item = new Item("Test Item", 1, itemType, "A test item");
+		item.setItemType(itemType);
+
+		item = itemDAO.save(item);
+
+		logger.info("Item added: {} with type: {}", item, itemType);
 	}
 
 	private void deleteData() {
 		logger.info("Deleting all data");
 		employeeRoleDAO.deleteAll();
 		userDAO.deleteAll();
+		itemDAO.deleteAll();
 		itemTypeDAO.deleteAll();
 		itemDAO.deleteAll();
 		permissionDAO.deleteAll();

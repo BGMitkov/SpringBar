@@ -2,33 +2,29 @@ package bar.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.UniqueElements;
+import javax.validation.constraints.Positive;
 
 @Entity
-@Table(name = "item", uniqueConstraints = @UniqueConstraint(columnNames = { "item_id", "name" }))
+@Table(name = "items")
 public class Item {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "item_id")
-	private long id;
+	private Long id;
 	@NotBlank
 	private String name;
-	@NotNull
+	@Positive
 	private int price;
-	@ManyToOne
-	@JoinColumn(name = "item_type_id")
+	@ManyToOne /* (optional = false) */
+	@JoinColumn(name = "item_type_id"/* , nullable = false, updatable = false */)
 	private ItemType itemType;
 	@NotBlank
 	private String description;
@@ -43,7 +39,7 @@ public class Item {
 		this.description = description;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -63,7 +59,7 @@ public class Item {
 		return description;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -75,8 +71,8 @@ public class Item {
 		this.price = price;
 	}
 
-	public void setType(ItemType type) {
-		this.itemType = type;
+	public void setItemType(ItemType itemType) {
+		this.itemType = itemType;
 	}
 
 	public void setDescription(String description) {

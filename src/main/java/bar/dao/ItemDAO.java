@@ -10,8 +10,8 @@ import bar.model.ItemType;
 
 @Repository
 public interface ItemDAO extends CrudRepository<Item, Long> {
-	
+
 	Item findByName(String name);
-	
-	List<ItemType> findByItemType(ItemType itemType);
+
+	List<Item> findByItemType(ItemType itemType);
 }
