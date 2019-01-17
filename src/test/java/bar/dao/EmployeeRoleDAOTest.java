@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import bar.SpringBarApplication;
 import bar.model.EmployeeRole;
+import bar.repository.EmployeeRoleDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)

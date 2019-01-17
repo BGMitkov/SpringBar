@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import bar.dao.BillDAO;
-import bar.dao.OrderDAO;
 import bar.model.Bill;
 import bar.model.BillStatus;
 import bar.model.Order;
 import bar.model.OrderStatus;
+import bar.repository.BillDAO;
+import bar.repository.OrderDAO;
 
 @Controller
 @RequestMapping("/orders")

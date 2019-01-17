@@ -20,11 +20,12 @@ public class Item {
 	@Column(name = "item_id")
 	private Long id;
 	@NotBlank
+	@Column(unique = true)
 	private String name;
 	@Positive
 	private int price;
 	@ManyToOne /* (optional = false) */
-	@JoinColumn(name = "item_type_id"/* , nullable = false, updatable = false */)
+	@JoinColumn(name = "item_type_id", nullable = false)
 	private ItemType itemType;
 	@NotBlank
 	private String description;

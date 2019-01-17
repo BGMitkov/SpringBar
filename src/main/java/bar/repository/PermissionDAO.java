@@ -1,4 +1,4 @@
-package bar.dao;
+package bar.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

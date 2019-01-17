@@ -10,7 +10,41 @@
 	href="/SpringBar/resources/css/bar.css" />
 </head>
 <body>
-	<h1>${applicationName}</h1>
+
+	<div id="header">
+		<div align="left">
+			<div id="applicationName">
+				<h2>${applicationName}</h2>
+			</div>
+			<div class="welcome-greeting">Welcome, ${name}!</div>
+		</div>
+		<div align="center">
+			<h2>Orders</h2>
+		</div>
+		<div align="right" id="nav">
+			<div class="login_register">
+				<form:form action="/SpringBar/view/registerEmployee" method="GET">
+					<button type="submit">Register</button>
+				</form:form>
+			</div>
+			<div class="item_order">
+				<form:form action="/SpringBar/view/order" method="GET">
+					<button type="submit">Order</button>
+				</form:form>
+			</div>
+			<div class="item_order">
+				<form:form action="/SpringBar/view/addItem" method="GET">
+					<button type="submit">Add Item</button>
+				</form:form>
+			</div>
+			<div class="signout">
+				<form:form action="/SpringBar/signout" method="GET">
+					<button type="submit">Sing out</button>
+				</form:form>
+			</div>
+		</div>
+	</div>
+
 	<form:form method="POST" modelAttribute="user"
 		action="/SpringBar/registerEmployeeSubmit">
 		<div class="form-group">

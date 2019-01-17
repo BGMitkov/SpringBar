@@ -1,4 +1,4 @@
-package bar.dao;
+package bar.repository;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import bar.model.Item;
 import bar.model.ItemType;
 
 @Repository
-public interface ItemDAO extends CrudRepository<Item, Long> {
+public interface ItemRepository extends CrudRepository<Item, Long> {
 
 	Item findByName(String name);
 

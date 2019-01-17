@@ -10,16 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import bar.dao.EmployeeRoleDAO;
-import bar.dao.ItemDAO;
-import bar.dao.ItemTypeDAO;
-import bar.dao.PermissionDAO;
-import bar.dao.UserDAO;
 import bar.model.EmployeeRole;
 import bar.model.Item;
 import bar.model.ItemType;
 import bar.model.Permission;
 import bar.model.User;
+import bar.repository.EmployeeRoleDAO;
+import bar.repository.ItemRepository;
+import bar.repository.ItemTypeDAO;
+import bar.repository.PermissionDAO;
+import bar.repository.UserDAO;
 
 @Component
 @Transactional
@@ -43,7 +43,7 @@ public class DatabaseUtilities {
 	@Autowired
 	private ItemTypeDAO itemTypeDAO;
 	@Autowired
-	private ItemDAO itemDAO;
+	private ItemRepository itemDAO;
 	@Autowired
 	private EmployeeRoleDAO employeeRoleDAO;
 	@Autowired
@@ -73,8 +73,8 @@ public class DatabaseUtilities {
 		permissionDAO.save(new Permission("/SpringBar/getAcceptedOrders", manager, bartender));
 		permissionDAO.save(new Permission("/SpringBar/acceptOrder", manager, bartender));
 		permissionDAO.save(new Permission("/SpringBar/printBill", manager, server));
-		permissionDAO.save(new Permission("/SpringBar/view/addItemForm", manager));
-		permissionDAO.save(new Permission("/SpringBar/addItem", manager));
+//		permissionDAO.save(new Permission("/SpringBar/view/addItemForm", manager));
+//		permissionDAO.save(new Permission("/SpringBar/addItem", manager));
 //		permissionDAO.save(new Permission("/SpringBar/", manager, bartender, server));
 		permissionDAO.save(new Permission("/SpringBar/signOut", manager, bartender, server));
 		permissionDAO.save(new Permission("/SpringBar/test", testRoleWithPermission));

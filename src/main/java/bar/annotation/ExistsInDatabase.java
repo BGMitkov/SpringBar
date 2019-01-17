@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import bar.dao.NameRepository;
+import bar.repository.NameRepository;
 import bar.validator.ExistsByNameValidator;
 
 /**

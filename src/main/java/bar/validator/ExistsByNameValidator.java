@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import bar.annotation.ExistsInDatabase;
-import bar.dao.NameRepository;
+import bar.repository.NameRepository;
 
 public class ExistsByNameValidator implements ConstraintValidator<ExistsInDatabase, String> {
 

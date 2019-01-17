@@ -17,7 +17,7 @@ import bar.annotation.HasLowerCaseCharacter;
 import bar.annotation.HasSpecialSymbol;
 import bar.annotation.HasUpperCaseChar;
 import bar.annotation.UserNameConstraint;
-import bar.dao.EmployeeRoleDAO;
+import bar.repository.EmployeeRoleDAO;
 
 public class UserDTO {
 	@UserNameConstraint(message = "*The username contains invalid characters")

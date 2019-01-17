@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import bar.annotation.ValidationSequence;
-import bar.dao.EmployeeRoleDAO;
 import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
 import bar.model.User;
+import bar.repository.EmployeeRoleDAO;
 
 @Controller
 public class UserController {

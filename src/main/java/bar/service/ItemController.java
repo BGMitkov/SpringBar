@@ -1,6 +1,7 @@
 package bar.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -13,19 +14,21 @@ import org.springframework.web.servlet.ModelAndView;
 
 import bar.annotation.ValidationSequence;
 import bar.constant.URI;
-import bar.dao.ItemDAO;
-import bar.dao.ItemTypeDAO;
 import bar.dto.ItemDTO;
 import bar.model.Item;
 import bar.model.ItemType;
+import bar.repository.ItemRepository;
+import bar.repository.ItemTypeDAO;
 
 @Controller
 public class ItemController {
 
 	@Autowired
-	private ItemDAO itemDAO;
+	private ItemRepository itemDAO;
 	@Autowired
 	private ItemTypeDAO itemTypeDAO;
+	@Autowired
+	private JmsTemplate jmsTemplate;
 
 	@RequestMapping(value = URI.ADD_ITEM_FORM, method = RequestMethod.GET)
 	public ModelAndView item() {
@@ -33,13 +36,15 @@ public class ItemController {
 	}
 
 	@RequestMapping(value = URI.ADD_ITEM, method = RequestMethod.POST)
-	public String addItem(@ModelAttribute("itemDTO") @Validated(ValidationSequence.class) ItemDTO itemDTO, BindingResult bindingResult, ModelMap model) {
+	public String addItem(@ModelAttribute("itemDTO") @Validated(ValidationSequence.class) ItemDTO itemDTO,
+			BindingResult bindingResult, ModelMap model) {
 		if (bindingResult.hasErrors()) {
 			return "addItem";
 		}
 
-		Item storedItem = itemDAO.save(convertToItem(itemDTO));
-		model.addAttribute(storedItem);
+		jmsTemplate.convertAndSend("itemRepository", convertToItem(itemDTO));
+//		Item storedItem = itemDAO.save(convertToItem(itemDTO));
+		model.addAttribute("item", itemDTO);
 		return "addedItem";
 	}
 
@@ -49,6 +54,12 @@ public class ItemController {
 		return allItems;
 	}
 
+//	@RequestMapping(value = "/itemTypes", method = RequestMethod.GET, produces = "apl")
+//	public Iterable<ItemType> itemTypes() {
+//		Iterable<ItemType> itemTypes = itemTypeDAO.findAll();
+//		return itemTypes;
+//	}
+	
 	private Item convertToItem(ItemDTO itemDTO) {
 		ItemType itemType = itemTypeDAO.findByName(itemDTO.getItemType());
 		Item item = new Item(itemDTO.getName(), itemDTO.getPrice(), itemType, itemDTO.getDescription());

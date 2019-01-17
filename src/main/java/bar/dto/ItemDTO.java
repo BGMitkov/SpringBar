@@ -5,7 +5,7 @@ import javax.validation.constraints.Positive;
 
 import bar.annotation.ExistsInDatabase;
 import bar.annotation.Extended;
-import bar.dao.ItemTypeDAO;
+import bar.repository.ItemTypeDAO;
 
 public class ItemDTO {
 	@NotBlank

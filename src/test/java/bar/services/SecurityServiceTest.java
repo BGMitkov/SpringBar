@@ -24,12 +24,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import bar.SpringBarApplication;
-import bar.dao.EmployeeRoleDAO;
-import bar.dao.UserDAO;
 import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
 import bar.model.Permission;
 import bar.model.User;
+import bar.repository.EmployeeRoleDAO;
+import bar.repository.UserDAO;
 import bar.service.SecurityService;
 import bar.service.UserContext;
 

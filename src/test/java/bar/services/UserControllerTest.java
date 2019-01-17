@@ -30,10 +30,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.ModelAndView;
 
 import bar.SpringBarApplication;
-import bar.dao.EmployeeRoleDAO;
 import bar.dto.UserDTO;
 import bar.interceptor.UserServiceInterceptor;
 import bar.model.User;
+import bar.repository.EmployeeRoleDAO;
 import bar.service.SecurityService;
 
 @RunWith(SpringJUnit4ClassRunner.class)

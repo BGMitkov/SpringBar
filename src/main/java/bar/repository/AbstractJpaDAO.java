@@ -1,4 +1,4 @@
-package bar.dao;
+package bar.repository;
 
 import javax.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;

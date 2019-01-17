@@ -1,4 +1,4 @@
-package bar.dao;
+package bar.repository;
 
 import java.util.List;
 

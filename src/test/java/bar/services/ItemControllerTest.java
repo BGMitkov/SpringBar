@@ -26,12 +26,12 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import bar.SpringBarApplication;
 import bar.constant.URI;
-import bar.dao.ItemDAO;
-import bar.dao.ItemTypeDAO;
 import bar.dto.ItemDTO;
 import bar.interceptor.UserServiceInterceptor;
 import bar.model.Item;
 import bar.model.ItemType;
+import bar.repository.ItemRepository;
+import bar.repository.ItemTypeDAO;
 import bar.service.SecurityService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,7 +49,7 @@ public class ItemControllerTest extends AbstractTest {
 	@Autowired
 	private ItemTypeDAO itemTypeDAO;
 	@MockBean
-	private ItemDAO itemDAO;
+	private ItemRepository itemDAO;
 
 	@Override
 	@Before

@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <td>type</td>
-            <td>${item.type.name}</td>
+            <td>${item.ItemType}</td>
         </tr>
     </table>
 </body>

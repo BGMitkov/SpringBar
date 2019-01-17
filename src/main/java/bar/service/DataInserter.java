@@ -13,6 +13,7 @@ import bar.utility.DatabaseUtilities;
  * @author bgmitkov
  *
  */
+@Component
 public class DataInserter {
 
 	@Autowired

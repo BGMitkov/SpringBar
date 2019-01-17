@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import bar.dao.PermissionDAO;
-import bar.dao.UserDAO;
 import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
 import bar.model.Permission;
 import bar.model.User;
+import bar.repository.PermissionDAO;
+import bar.repository.UserDAO;
 
 /**
  * Class implementing the security functionality for the application.
