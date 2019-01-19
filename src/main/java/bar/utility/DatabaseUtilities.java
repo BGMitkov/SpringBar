@@ -15,11 +15,11 @@ import bar.model.Item;
 import bar.model.ItemType;
 import bar.model.Permission;
 import bar.model.User;
-import bar.repository.EmployeeRoleDAO;
+import bar.repository.EmployeeRoleRepository;
 import bar.repository.ItemRepository;
-import bar.repository.ItemTypeDAO;
-import bar.repository.PermissionDAO;
-import bar.repository.UserDAO;
+import bar.repository.ItemTypeRepository;
+import bar.repository.PermissionRepository;
+import bar.repository.UserRepository;
 
 @Component
 @Transactional
@@ -39,15 +39,15 @@ public class DatabaseUtilities {
 //	};
 
 	@Autowired
-	private UserDAO userDAO;
+	private UserRepository userDAO;
 	@Autowired
-	private ItemTypeDAO itemTypeDAO;
+	private ItemTypeRepository itemTypeDAO;
 	@Autowired
-	private ItemRepository itemDAO;
+	private ItemRepository itemRepository;
 	@Autowired
-	private EmployeeRoleDAO employeeRoleDAO;
+	private EmployeeRoleRepository employeeRoleDAO;
 	@Autowired
-	private PermissionDAO permissionDAO;
+	private PermissionRepository permissionDAO;
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
 
@@ -113,7 +113,7 @@ public class DatabaseUtilities {
 		Item item = new Item("Test Item", 1, itemType, "A test item");
 		item.setItemType(itemType);
 
-		item = itemDAO.save(item);
+		item = itemRepository.save(item);
 
 		logger.info("Item added: {} with type: {}", item, itemType);
 	}
@@ -122,9 +122,9 @@ public class DatabaseUtilities {
 		logger.info("Deleting all data");
 		employeeRoleDAO.deleteAll();
 		userDAO.deleteAll();
-		itemDAO.deleteAll();
+		itemRepository.deleteAll();
 		itemTypeDAO.deleteAll();
-		itemDAO.deleteAll();
+		itemRepository.deleteAll();
 		permissionDAO.deleteAll();
 	}
 }

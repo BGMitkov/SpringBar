@@ -1,4 +1,4 @@
-package bar.service;
+package bar.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,8 @@ import bar.annotation.ValidationSequence;
 import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
 import bar.model.User;
-import bar.repository.EmployeeRoleDAO;
+import bar.repository.EmployeeRoleRepository;
+import bar.service.SecurityService;
 
 @Controller
 public class UserController {
@@ -28,7 +29,7 @@ public class UserController {
 	@Autowired
 	private SecurityService securityService;
 	@Autowired
-	private EmployeeRoleDAO employeeRoleDAO;
+	private EmployeeRoleRepository employeeRoleRepository;
 
 	@GetMapping("/view/registerEmployee")
 	public String registerEmployeeForm(Model model) {
@@ -79,7 +80,7 @@ public class UserController {
 	}
 
 	private User convertToUser(UserDTO userDTO) {
-		EmployeeRole employeeRole = employeeRoleDAO.findByName(userDTO.getEmployeeRole());
+		EmployeeRole employeeRole = employeeRoleRepository.findByName(userDTO.getEmployeeRole());
 		return new User(userDTO.getName(), userDTO.getPassword(), userDTO.getEmail(), employeeRole,
 				userDTO.getBirthDate());
 	}

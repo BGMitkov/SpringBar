@@ -28,6 +28,9 @@ public class Bill {
 	// TODO make a model for status so that it can be configurable
 	private BillStatus status;
 
+	public Bill() {
+	}
+
 	public Bill(String tableNumber, BillStatus billStatus) {
 		this.orders = new LinkedList<>();
 		this.tableNumber = tableNumber;

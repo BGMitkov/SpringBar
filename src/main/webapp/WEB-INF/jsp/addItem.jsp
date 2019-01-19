@@ -1,15 +1,17 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>For for adding items</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Spring Bar Add Item Form</title>
 <link rel="stylesheet" type="text/css"
-	href="/SpringBar/resources/css/bootstrap.css" />
+	href="<c:url value="/resources/css/bootstrap.css" />" />
 <link rel="stylesheet" type="text/css"
-	href="/SpringBar/resources/css/bar.css" />
-<%-- <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script> --%>
+	href="<c:url value="/resources/css/bar.css" />" />
+<%-- <script type="text/javascript" src="/resources/js/jquery-2.1.3.min.js"></script> --%>
+<!-- <script type="text/javascript" src="/resources/js/orderTableFiller.js"></script> -->
 </head>
 <body>
 	<div id="header">
@@ -20,7 +22,7 @@
 			<div class="welcome-greeting">Welcome, ${name}!</div>
 		</div>
 		<div align="center">
-			<h2>Orders</h2>
+			<h2>Add Item</h2>
 		</div>
 		<div align="right" id="nav">
 			<div class="login_register">
@@ -31,11 +33,6 @@
 			<div class="item_order">
 				<form:form action="/SpringBar/view/order" method="GET">
 					<button type="submit">Order</button>
-				</form:form>
-			</div>
-			<div class="item_order">
-				<form:form action="/SpringBar/view/addItem" method="GET">
-					<button type="submit">Add Item</button>
 				</form:form>
 			</div>
 			<div class="signout">
@@ -75,8 +72,8 @@
 				name="description" id="description" />
 			<form:errors path="description" cssClass="error" />
 		</div>
-		
-		<button type="submit" class="btn btn-default">Add item</button>
+
+		<button type="submit" class="btn btn-default">Submit</button>
 	</form:form>
 </body>
 </html>

@@ -14,7 +14,7 @@ import bar.model.OrderStatus;
 import bar.model.User;
 
 @Repository
-public interface OrderDAO extends CrudRepository<Order, Long> {
+public interface OrderRepository extends CrudRepository<Order, Long> {
 
 	List<Order> findByStatus(OrderStatus status);
 	

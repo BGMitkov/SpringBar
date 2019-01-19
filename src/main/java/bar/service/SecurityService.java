@@ -10,8 +10,8 @@ import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
 import bar.model.Permission;
 import bar.model.User;
-import bar.repository.PermissionDAO;
-import bar.repository.UserDAO;
+import bar.repository.PermissionRepository;
+import bar.repository.UserRepository;
 
 /**
  * Class implementing the security functionality for the application.
@@ -25,11 +25,11 @@ public class SecurityService {
 	@Autowired
 	private UserContext userContext;
 	@Autowired
-	private UserDAO userDAO;
+	private UserRepository userDAO;
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
 	@Autowired
-	private PermissionDAO permissionDAO;
+	private PermissionRepository permissionDAO;
 
 //	private Map<String, Set<EmployeeRole>> permissions;
 

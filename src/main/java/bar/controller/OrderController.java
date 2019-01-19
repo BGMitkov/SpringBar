@@ -1,4 +1,4 @@
-package bar.service;
+package bar.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -20,29 +20,28 @@ import bar.model.Bill;
 import bar.model.BillStatus;
 import bar.model.Order;
 import bar.model.OrderStatus;
-import bar.repository.BillDAO;
-import bar.repository.OrderDAO;
+import bar.repository.BillRepository;
+import bar.repository.OrderRepository;
+import bar.service.SecurityService;
 
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderController.class);
-	private static final String UNAUTHORIZED = "unauthorized";
-
 	@Autowired
-	private OrderDAO orderDAO;
+	private OrderRepository orderRepository;
 	@Autowired
-	private BillDAO billDAO;
+	private BillRepository billRepository;
 	@Autowired
 	private SecurityService securityService;
 
 	// TODO create OrderDTO
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	public String order(@ModelAttribute() Order order) {
-		Bill bill = billDAO.findByTableNumberAndStatus(order.getTable(), BillStatus.OPEN);
+		Bill bill = billRepository.findByTableNumberAndStatus(order.getTable(), BillStatus.OPEN);
 		if (bill == null) {
-			bill = billDAO.save(new Bill(order.getTable(), BillStatus.OPEN));
+			bill = billRepository.save(new Bill(order.getTable(), BillStatus.OPEN));
 		}
 		order.setOrderDate(new Date().getTime());
 		bill.addOrder(order);
@@ -59,7 +58,7 @@ public class OrderController {
 			log.info("Exception occured in method getWaitingOrders");
 			return null;
 		}
-		return orderDAO.findByStatus(orderStatus);
+		return orderRepository.findByStatus(orderStatus);
 	}
 
 	// TODO decide to change the accepted to preparing status
@@ -67,7 +66,7 @@ public class OrderController {
 	@RequestMapping(value = "/accepted", method = RequestMethod.GET)
 	public String getAcceptedOrders(ModelMap modelMap) {
 
-		modelMap.addAllAttributes(orderDAO.findByExecutorAndStatus(securityService.getUser(), OrderStatus.ACCEPTED));
+		modelMap.addAllAttributes(orderRepository.findByExecutorAndStatus(securityService.getUser(), OrderStatus.ACCEPTED));
 
 		return "acceptedOrders";
 	}

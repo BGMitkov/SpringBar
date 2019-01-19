@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+@Deprecated
 public abstract class AbstractJpaDAO<T> {
 
 	private Class<T> clazz;

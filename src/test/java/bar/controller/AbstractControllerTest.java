@@ -1,4 +1,4 @@
-package bar.services;
+package bar.controller;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -23,7 +23,7 @@ import bar.SpringBarApplication;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
 @WebAppConfiguration
-public abstract class AbstractTest {
+public abstract class AbstractControllerTest {
 	
 	protected MockMvc mvc;
 	@Autowired

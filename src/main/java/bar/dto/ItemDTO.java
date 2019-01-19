@@ -5,7 +5,7 @@ import javax.validation.constraints.Positive;
 
 import bar.annotation.ExistsInDatabase;
 import bar.annotation.Extended;
-import bar.repository.ItemTypeDAO;
+import bar.repository.ItemTypeRepository;
 
 public class ItemDTO {
 	@NotBlank
@@ -13,7 +13,7 @@ public class ItemDTO {
 	@Positive
 	private int price;
 	@NotBlank
-	@ExistsInDatabase(repository = ItemTypeDAO.class, groups = { Extended.class })
+	@ExistsInDatabase(repository = ItemTypeRepository.class, groups = { Extended.class })
 	private String itemType;
 	@NotBlank
 	private String description;

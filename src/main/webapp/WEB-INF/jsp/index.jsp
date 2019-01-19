@@ -5,7 +5,6 @@
 
 <!DOCTYPE html>
 <html>
-4
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Spring Bar Index</title>
@@ -28,6 +27,11 @@
 			<h2>Orders</h2>
 		</div>
 		<div align="right" id="nav">
+			<div>
+				<form:form action="/SpringBar/view/items" method="GET">
+					<button type="submit">Items</button>
+				</form:form>
+			</div>
 			<div class="login_register">
 				<form:form action="/SpringBar/view/registerEmployee" method="GET">
 					<button type="submit">Register</button>

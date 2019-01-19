@@ -1,4 +1,4 @@
-package bar.services;
+package bar.utility;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;

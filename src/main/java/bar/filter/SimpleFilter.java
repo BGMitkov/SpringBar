@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import bar.service.UserController;
+import bar.controller.UserController;
 
 @Deprecated
 public class SimpleFilter implements Filter  {

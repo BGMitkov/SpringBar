@@ -1,4 +1,4 @@
-package bar.services;
+package bar.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,14 +33,14 @@ import bar.SpringBarApplication;
 import bar.dto.UserDTO;
 import bar.interceptor.UserServiceInterceptor;
 import bar.model.User;
-import bar.repository.EmployeeRoleDAO;
+import bar.repository.EmployeeRoleRepository;
 import bar.service.SecurityService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
 @WebAppConfiguration
 @Transactional
-public class UserControllerTest extends AbstractTest {
+public class UserControllerTest extends AbstractControllerTest {
 
 //	MockHttpSession session;
 

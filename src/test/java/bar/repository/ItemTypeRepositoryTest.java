@@ -1,4 +1,4 @@
-package bar.dao;
+package bar.repository;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
@@ -18,13 +18,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import bar.SpringBarApplication;
 import bar.model.ItemType;
-import bar.repository.ItemTypeDAO;
+import bar.repository.ItemTypeRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
-public class ItemTypeDAOTest {
+public class ItemTypeRepositoryTest {
 	@Autowired
-	private ItemTypeDAO itemTypeDAO;
+	private ItemTypeRepository itemTypeDAO;
 
 	@Rule
 	public ExpectedException exceptionRule = ExpectedException.none();

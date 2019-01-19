@@ -1,4 +1,4 @@
-package bar.services;
+package bar.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
@@ -31,14 +32,14 @@ import bar.interceptor.UserServiceInterceptor;
 import bar.model.Item;
 import bar.model.ItemType;
 import bar.repository.ItemRepository;
-import bar.repository.ItemTypeDAO;
+import bar.repository.ItemTypeRepository;
 import bar.service.SecurityService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
 @WebAppConfiguration
 @Transactional
-public class ItemControllerTest extends AbstractTest {
+public class ItemControllerTest extends AbstractControllerTest {
 
 	@MockBean
 	private SecurityService securityService;
@@ -47,9 +48,11 @@ public class ItemControllerTest extends AbstractTest {
 	@MockBean
 	private UserServiceInterceptor userServiceInterceptor;
 	@Autowired
-	private ItemTypeDAO itemTypeDAO;
+	private ItemTypeRepository itemTypeDAO;
 	@MockBean
 	private ItemRepository itemDAO;
+	@MockBean
+	private JmsTemplate jmsTemplate;
 
 	@Override
 	@Before
@@ -59,8 +62,8 @@ public class ItemControllerTest extends AbstractTest {
 		itemDTO.setName("item");
 		itemDTO.setPrice(1);
 		itemDTO.setDescription("An item");
-		itemDTO.setItemType("Test Type");
-		ItemType itemType = itemTypeDAO.findByName("Test Type");
+		itemDTO.setItemType("TestItemType");
+		ItemType itemType = new ItemType("TestItemType");
 		this.item = new Item("item", 1, itemType, "An item");
 		try {
 			when(userServiceInterceptor.preHandle(any(), any(), any())).thenReturn(true);
@@ -139,7 +142,7 @@ public class ItemControllerTest extends AbstractTest {
 		when(itemDAO.findAll()).thenReturn(list);
 		MvcResult result = this.mvc.perform(get(URI.ITEMS)).andExpect(status().isOk()).andReturn();
 		assertEquals(
-				"[{\"id\":null,\"name\":\"item\",\"price\":1,\"itemType\":{\"id\":1,\"name\":\"Test Type\"},\"description\":\"An item\"}]",
+				"[{\"id\":null,\"name\":\"item\",\"price\":1,\"itemType\":{\"id\":null,\"name\":\"TestItemType\"},\"description\":\"An item\"}]",
 				result.getResponse().getContentAsString());
 	}
 

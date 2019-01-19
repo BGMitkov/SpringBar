@@ -1,4 +1,4 @@
-package bar.services;
+package bar.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,12 +24,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import bar.SpringBarApplication;
+import bar.controller.AbstractControllerTest;
 import bar.dto.UserDTO;
 import bar.model.EmployeeRole;
 import bar.model.Permission;
 import bar.model.User;
-import bar.repository.EmployeeRoleDAO;
-import bar.repository.UserDAO;
+import bar.repository.EmployeeRoleRepository;
+import bar.repository.UserRepository;
 import bar.service.SecurityService;
 import bar.service.UserContext;
 
@@ -37,7 +38,7 @@ import bar.service.UserContext;
 @SpringBootTest(classes = SpringBarApplication.class)
 @WebAppConfiguration
 @Transactional
-public class SecurityServiceTest extends AbstractTest {
+public class SecurityServiceTest extends AbstractControllerTest {
 
 	@Autowired
 	MockHttpSession httpSession;
@@ -47,12 +48,12 @@ public class SecurityServiceTest extends AbstractTest {
 	private UserContext userContext;
 	private String testUri;
 	@Autowired
-	private EmployeeRoleDAO employeeRoleDAO;
+	private EmployeeRoleRepository employeeRoleDAO;
 	private EmployeeRole testRoleWithPermission;
 	private EmployeeRole testRoleWithOutPermission;
 	private User user;
 	@MockBean
-	private UserDAO userDAO;
+	private UserRepository userDAO;
 	@MockBean
 	PasswordEncoder passwordEncoder;
 

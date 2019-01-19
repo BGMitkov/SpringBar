@@ -1,4 +1,4 @@
-package bar.dao;
+package bar.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,14 +12,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import bar.SpringBarApplication;
 import bar.model.EmployeeRole;
-import bar.repository.EmployeeRoleDAO;
+import bar.repository.EmployeeRoleRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
-public class EmployeeRoleDAOTest {
+public class EmployeeRoleRepositoryTest {
 	private static final String TEST_EMPLOYEE_ROLE = "testEmployeeRole";
 	@Autowired
-	private EmployeeRoleDAO employeeRoleDAO;
+	private EmployeeRoleRepository employeeRoleDAO;
 
 	@Test
 	public void findByNameTest() {

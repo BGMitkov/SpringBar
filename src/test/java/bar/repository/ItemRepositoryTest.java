@@ -1,4 +1,4 @@
-package bar.dao;
+package bar.repository;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -21,15 +21,15 @@ import bar.SpringBarApplication;
 import bar.model.Item;
 import bar.model.ItemType;
 import bar.repository.ItemRepository;
-import bar.repository.ItemTypeDAO;
+import bar.repository.ItemTypeRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBarApplication.class)
-public class ItemDAOTest {
+public class ItemRepositoryTest {
 	@Autowired
 	private ItemRepository itemDAO;
 	@Autowired
-	private ItemTypeDAO itemTypeDAO;
+	private ItemTypeRepository itemTypeDAO;
 	private ItemType itemType;
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();

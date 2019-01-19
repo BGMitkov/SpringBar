@@ -1,4 +1,4 @@
-package bar.service;
+package bar.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
@@ -18,15 +18,15 @@ import bar.dto.ItemDTO;
 import bar.model.Item;
 import bar.model.ItemType;
 import bar.repository.ItemRepository;
-import bar.repository.ItemTypeDAO;
+import bar.repository.ItemTypeRepository;
 
 @Controller
 public class ItemController {
 
 	@Autowired
-	private ItemRepository itemDAO;
+	private ItemRepository itemRepository;
 	@Autowired
-	private ItemTypeDAO itemTypeDAO;
+	private ItemTypeRepository itemTypeRepository;
 	@Autowired
 	private JmsTemplate jmsTemplate;
 
@@ -36,7 +36,7 @@ public class ItemController {
 	}
 
 	@RequestMapping(value = URI.ADD_ITEM, method = RequestMethod.POST)
-	public String addItem(@ModelAttribute("itemDTO") @Validated(ValidationSequence.class) ItemDTO itemDTO,
+	public String addItem(@ModelAttribute("item") @Validated(ValidationSequence.class) ItemDTO itemDTO,
 			BindingResult bindingResult, ModelMap model) {
 		if (bindingResult.hasErrors()) {
 			return "addItem";
@@ -50,8 +50,7 @@ public class ItemController {
 
 	@RequestMapping(value = URI.ITEMS, method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody Iterable<Item> getItems() {
-		Iterable<Item> allItems = itemDAO.findAll();
-		return allItems;
+		return itemRepository.findAll();
 	}
 
 //	@RequestMapping(value = "/itemTypes", method = RequestMethod.GET, produces = "apl")
@@ -59,9 +58,9 @@ public class ItemController {
 //		Iterable<ItemType> itemTypes = itemTypeDAO.findAll();
 //		return itemTypes;
 //	}
-	
+
 	private Item convertToItem(ItemDTO itemDTO) {
-		ItemType itemType = itemTypeDAO.findByName(itemDTO.getItemType());
+		ItemType itemType = itemTypeRepository.findByName(itemDTO.getItemType());
 		Item item = new Item(itemDTO.getName(), itemDTO.getPrice(), itemType, itemDTO.getDescription());
 		return item;
 	}

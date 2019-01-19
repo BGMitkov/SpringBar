@@ -17,7 +17,7 @@ import bar.annotation.HasLowerCaseCharacter;
 import bar.annotation.HasSpecialSymbol;
 import bar.annotation.HasUpperCaseChar;
 import bar.annotation.UserNameConstraint;
-import bar.repository.EmployeeRoleDAO;
+import bar.repository.EmployeeRoleRepository;
 
 public class UserDTO {
 	@UserNameConstraint(message = "*The username contains invalid characters")
@@ -31,7 +31,7 @@ public class UserDTO {
 	@NotEmpty(message = "*Please provide an email")
 	private String email;
 	@NotEmpty(message = "*Please select an employee role")
-	@ExistsInDatabase(repository = EmployeeRoleDAO.class, groups = Extended.class)
+	@ExistsInDatabase(repository = EmployeeRoleRepository.class, groups = Extended.class)
 	private String employeeRole;
 	@DateTimeFormat(iso = ISO.DATE)
 	@NotNull(message = "*Please select your birthdate")
