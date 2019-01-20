@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import bar.constant.URI;
 import bar.model.EmployeeRole;
 import bar.model.Item;
 import bar.model.ItemType;
@@ -78,7 +79,9 @@ public class DatabaseUtilities {
 //		permissionDAO.save(new Permission("/SpringBar/", manager, bartender, server));
 		permissionDAO.save(new Permission("/SpringBar/signOut", manager, bartender, server));
 		permissionDAO.save(new Permission("/SpringBar/test", testRoleWithPermission));
-		permissionDAO.save(new Permission("/SpringBar/items", manager, server));
+//		permissionDAO.save(new Permission(URI.ITEMS, manager, server));
+//		permissionDAO.save(new Permission(URI.ITEM_TYPES, manager, server));
+		
 	}
 
 	private void addTestEmployeeRoles() {

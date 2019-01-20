@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
 <%@page session="true"%>
 
 <!DOCTYPE html>
@@ -27,18 +26,13 @@
 			<h2>Orders</h2>
 		</div>
 		<div align="right" id="nav">
-			<div>
-				<form:form action="/SpringBar/view/items" method="GET">
-					<button type="submit">Items</button>
-				</form:form>
-			</div>
 			<div class="login_register">
 				<form:form action="/SpringBar/view/registerEmployee" method="GET">
 					<button type="submit">Register</button>
 				</form:form>
 			</div>
 			<div class="item_order">
-				<form:form action="/SpringBar/view/order" method="GET">
+				<form:form action="/SpringBar/view/orderForm" method="GET">
 					<button type="submit">Order</button>
 				</form:form>
 			</div>

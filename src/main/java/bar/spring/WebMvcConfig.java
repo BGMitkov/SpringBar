@@ -51,10 +51,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Autowired
 	private UserServiceInterceptor userServiceInterceptor;
 
+	//TODO add another interceptor for /rest/** methods
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		logger.info("Add interceptor UserServiceInterceptor");
-		registry.addInterceptor(userServiceInterceptor).addPathPatterns("/**").excludePathPatterns("/resources/**");
+		registry.addInterceptor(userServiceInterceptor).addPathPatterns("/**").excludePathPatterns("/resources/**")
+				.excludePathPatterns("/rest/**");
 	}
 
 	@Override

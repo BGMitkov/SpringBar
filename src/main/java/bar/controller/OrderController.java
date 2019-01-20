@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,11 +22,11 @@ import bar.model.BillStatus;
 import bar.model.Order;
 import bar.model.OrderStatus;
 import bar.repository.BillRepository;
+import bar.repository.ItemRepository;
 import bar.repository.OrderRepository;
 import bar.service.SecurityService;
 
 @Controller
-@RequestMapping("/orders")
 public class OrderController {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderController.class);
@@ -35,6 +36,13 @@ public class OrderController {
 	private BillRepository billRepository;
 	@Autowired
 	private SecurityService securityService;
+	@Autowired
+	private ItemRepository itemRepository;
+
+	@RequestMapping(value = "/view/orderForm", method = RequestMethod.GET)
+	public String orderForm() {
+		return "order";
+	}
 
 	// TODO create OrderDTO
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
@@ -66,7 +74,8 @@ public class OrderController {
 	@RequestMapping(value = "/accepted", method = RequestMethod.GET)
 	public String getAcceptedOrders(ModelMap modelMap) {
 
-		modelMap.addAllAttributes(orderRepository.findByExecutorAndStatus(securityService.getUser(), OrderStatus.ACCEPTED));
+		modelMap.addAllAttributes(
+				orderRepository.findByExecutorAndStatus(securityService.getUser(), OrderStatus.ACCEPTED));
 
 		return "acceptedOrders";
 	}

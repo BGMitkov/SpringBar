@@ -1,6 +1,7 @@
 package bar.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,21 +44,19 @@ public class ItemController {
 		}
 
 		jmsTemplate.convertAndSend("itemRepository", convertToItem(itemDTO));
-//		Item storedItem = itemDAO.save(convertToItem(itemDTO));
 		model.addAttribute("item", itemDTO);
 		return "addedItem";
 	}
 
-	@RequestMapping(value = URI.ITEMS, method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = URI.ITEMS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody Iterable<Item> getItems() {
 		return itemRepository.findAll();
 	}
 
-//	@RequestMapping(value = "/itemTypes", method = RequestMethod.GET, produces = "apl")
-//	public Iterable<ItemType> itemTypes() {
-//		Iterable<ItemType> itemTypes = itemTypeDAO.findAll();
-//		return itemTypes;
-//	}
+	@RequestMapping(value = URI.ITEM_TYPES, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public @ResponseBody Iterable<ItemType> itemTypes() {
+		return itemTypeRepository.findAll();
+	}
 
 	private Item convertToItem(ItemDTO itemDTO) {
 		ItemType itemType = itemTypeRepository.findByName(itemDTO.getItemType());
