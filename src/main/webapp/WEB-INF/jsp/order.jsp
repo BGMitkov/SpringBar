@@ -50,14 +50,13 @@
 
 	<div id="content">
 		<div id="tables">
-			<table id="items_table" class="table">
-				<tr>
-					<th>Name</th>
-					<th>Price</th>
-					<th>Type</th>
-					<th>Description</th>
-				</tr>
-			</table>
+<!-- 			<table id="items_table" class="table"> -->
+<!-- 				<tr> -->
+<!-- 					<th>Name</th> -->
+<!-- 					<th>Price</th> -->
+<!-- 					<th>Description</th> -->
+<!-- 				</tr> -->
+<!-- 			</table> -->
 
 		</div>
 	</div>
